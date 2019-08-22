@@ -31,7 +31,7 @@ if (isset($_POST[SUBMIT_FIELD])) {
             throw new Exception('This user does not have permission to create Leads!');
         }
         
-        $sql = "SELECT * from " . $table;
+        $sql = "SELECT * FROM " . $table;
     
         $r = $wpdb->get_row($sql, ARRAY_A);
     

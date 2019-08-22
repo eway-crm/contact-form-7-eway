@@ -57,7 +57,7 @@ function CF7EWInstall() {
     
     $createFieldsTable = "CREATE TABLE IF NOT EXISTS " . $fieldsTable . "
                 (
-                " . ID_FIELD . " int NOT NULL AUTO_INCREMENT,
+                " . ID_FIELD . " INT NOT NULL AUTO_INCREMENT,
                                     " . FIELD_KEY . " NVARCHAR(256),									
                                     " . FIELD_VALUE . " NVARCHAR(256),
                                         UNIQUE KEY(" . ID_FIELD . ")
