@@ -1,7 +1,7 @@
 <?php
 
 require_once("CF7EWProcessPost.php");
-require_once("log.txt");
+
 /*
  * Render admin page form
  */
@@ -16,11 +16,11 @@ $fieldsTable = $wpdb->prefix . "" . FIELDS_TABLE;
 $query = "SELECT * FROM " . $fieldsTable;
 $fields = $wpdb->get_results($query, ARRAY_A);
 
-$key = $field[FIELD_KEY];
-$value = $field[FIELD_VALUE];
-
 foreach($fields as $field)
 {
+    $key = $field[FIELD_KEY];
+    $value = $field[FIELD_VALUE];
+    
     $table .= '
                 <tr>
                     <td>'.$key.'</td>
@@ -111,9 +111,9 @@ if ($r != null) {
                     
                     </style>
                     
-                    <form action="?page='.ADMIN_PAGE.'" method="post" >
-                    
                     <div style="background-color: white;width: 100%;min-height: 100vh;">
+                    
+                        <form action="?page='.ADMIN_PAGE.'" method="post" >
                     
                         <div style="max-height: 60px !important;padding-left: 48px;padding-top: 25px;padding-right: 20px;display: flex;vertical-align: center;"> 
                             <div style="align-self: center;"><object data="./../wp-content/plugins/contact-form-7-eway/eWayCRM-Logo-Red.svg" type="image/svg+xml" height="60px"></object></div>
@@ -124,15 +124,15 @@ if ($r != null) {
                         
                         </form>
                         
-                        <form>
+                        <form action="">
                         <div class="tab">
                             <button class="tablinks active" onclick="openTab(event, \'History\')"><div class="bottom active">History</div></button>
                             <button class="tablinks" onclick="openTab(event, \'Mapping\')"><div class="bottom">Mapping</div></button>
                         </div>
                         </form>
                         
-                        <form>
-                        <div id="History" class="tabcontent">
+                        <form action="">
+                        <div id="History" class="tabcontent" style="display: block;">
                             <div>Below, find all attempts to save data into eWay-CRM.</div>
                             <div class="content">
                                 '.file_get_contents("C:\wamp64\www\WordPress\wordpress\wp-content\plugins\contact-form-7-eway\log.txt").'
@@ -141,7 +141,7 @@ if ($r != null) {
                         </div>
                         </form>
                         
-                        <form>
+                        <form action="">
                         <div id="Mapping" class="tabcontent">
                             Here you can map your fields for the form.
                             <div class="content">
