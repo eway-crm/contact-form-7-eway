@@ -56,7 +56,19 @@ if (isset($_POST[SUBMIT_FIELD])) {
 if (isset($_POST[LOGOUT_FIELD]))
 {
     global $wpdb;
-    $wpdb->query( "TRUNCATE TABLE ".$wpdb->prefix . "" . SERVICE_TABLE );
+    $wpdb->query( "TRUNCATE TABLE ".$wpdb->prefix . "" . SERVICE_TABLE );   
+}
+
+if (isset($_POST[ADD_FIELD]))
+{
+    global $wpdb;
+    $table = $wpdb->prefix . "" . FIELDS_TABLE;
+    $query = $wpdb->insert($table, array(FIELD_KEY => $_POST["wordpress"], FIELD_VALUE => $_POST["eway"]));
+    if (!$query) {
+        EchoError('Error when creating Contact form 7 eway extension custom field. Please try again.');
+    } else {
+        EchoInfo('Contact form 7 eway extension custom field was succesfully created.');
+    }
 }
 
 function EchoError($msg) {
