@@ -12,21 +12,27 @@ $pwdField = "";
 
 global $wpdb;
 
-$fieldsTable = $wpdb->prefix . "" . FIELDS_TABLE;
-$query = "SELECT * FROM " . $fieldsTable;
-$fields = $wpdb->get_results($query, ARRAY_A);
-
-foreach($fields as $field)
+function getFields()
 {
-    $key = $field[FIELD_KEY];
-    $value = $field[FIELD_VALUE];
-    
-    $table .= '
-                <tr>
-                    <td>'.$key.'</td>
-                    <td>'.$value.'</td>
-                </tr>
-                ';
+    global $wpdb;
+    $fieldsTable = $wpdb->prefix . "" . FIELDS_TABLE;
+    $query = "SELECT * FROM " . $fieldsTable;
+    $fields = $wpdb->get_results($query, ARRAY_A);
+    foreach($fields as $field)
+    {
+        $key = $field[FIELD_KEY];
+        $value = $field[FIELD_VALUE];
+        $id = $field[ID_FIELD];
+        
+        $ftable .= '
+                    <tr>
+                        <td>'.$key.'</td>
+                        <td>'.$value.'</td>
+                        <td><input style="float:right; background-color: #0062AF;height:32px;width:108px; color: white; border: none;" type="submit" name="'.DELETE_FIELD.'" value="'.$id.'" placeholder="Delete" /></td>
+                    </tr>
+                    ';
+    }
+    return $ftable;
 }
 
 $table = $wpdb->prefix . "" . SERVICE_TABLE;
@@ -91,10 +97,10 @@ if ($r != null) {
                         .content{
                             font-family: Segoe UI;
                             font-size: 15px;
-                            border: 1px solid;
-                            border-color: rgba(0, 0, 0, 0.6) !important;
+                            border: 1px solid rgba(0, 0, 0, 0.6) !important;
                             margin-top: 20px !important;
                             height: 100vh;
+                            padding: 25px;
                         }
                     
                         table {
@@ -124,43 +130,40 @@ if ($r != null) {
                         
                         </form>
                         
-                        <form action="">
                         <div class="tab">
                             <button class="tablinks active" onclick="openTab(event, \'History\')"><div class="bottom active">History</div></button>
                             <button class="tablinks" onclick="openTab(event, \'Mapping\')"><div class="bottom">Mapping</div></button>
                         </div>
-                        </form>
                         
-                        <form action="">
                         <div id="History" class="tabcontent" style="display: block;">
                             <div>Below, find all attempts to save data into eWay-CRM.</div>
                             <div class="content">
-                                '.file_get_contents("C:\wamp64\www\WordPress\wordpress\wp-content\plugins\contact-form-7-eway\log.txt").'
+                                '.nl2br(file_get_contents("C:\wamp64\www\WordPress\wordpress\wp-content\plugins\contact-form-7-eway\log.txt")).'
                             </div>
                             <div style="min-height: 25px !important;"></div>
                         </div>
-                        </form>
                         
-                        <form action="">
                         <div id="Mapping" class="tabcontent">
+                            <form action="?page='.ADMIN_PAGE.'" method="post" >
                             Here you can map your fields for the form.
+                            <div style="min-height: 60px !important;padding-top: 25px;display: flex;vertical-align: center;">
+                                <div style="align-self: center;">WordPress Field <input name="wordpress" type="text"/></div>
+                                <div style="align-self: center;padding-left: 30px;">eWay Field <input name="eway" type="text"/></div>
+                                <div style="align-self: center;float: right;margin-left: 30px;"><input style="float:right; background-color: #0062AF;height:32px;width:108px; color: white; border: none;" type="submit" name="'.ADD_FIELD.'" value="Add Field"/></div>
+                                <div style="align-self: center;margin-left: auto;"><input style="float:right; background-color: #0062AF;height:32px;width:150px; color: white; border: none;" type="submit" name="'.RESTORE_DEFAULT.'" value="Restore to Default"/></div>
+                            </div>
                             <div class="content">
                                 <table>
                                     <tr>
                                         <th>WordPress Field</th>
                                         <th>eWay Field</th>
                                     </tr>
-                                '.$table.'
+                                '.getFields().'
                                 </table>
                             </div>
-                            
-                            <div style="min-height: 60px !important;padding-top: 25px;padding-right: 20px;display: flex;vertical-align: center;">
-                                <div style="align-self: center;">WordPress Field <input name="wordpress" type="text"/></div>
-                                <div style="align-self: center;padding-left: 30px;">eWay Field <input name="eway" type="text"/></div>
-                                <div style="align-self: center;float: right;"><input style="float:right; background-color: #0062AF;height:32px;width:108px; color: white; border: none;" type="submit" name="'.ADD_FIELD.'" value="Add Field" /></div>
-                            </div>
+                            <div style="min-height: 25px !important;"></div>
+                            </form>
                         </div>
-                        </form>
                             
                     </div>
                     
@@ -180,6 +183,15 @@ if ($r != null) {
                             }
                             document.getElementById(tabName).style.display = "block";
                             evt.currentTarget.className += " active";
+                        }
+                        
+                        function stayOpen(){
+                            document.getElementById(Mapping).style.display = "block";
+                            document.getElementById(None).style.display = "block";
+                            document.getElementsByClassName("tablinks active")[0].className.replace(" active", "");
+                            document.getElementsByClassName("tablinks")[0].className += " active";
+                            document.getElementsByClassName("bottom active")[0].className.replace(" active", "");
+                            document.getElementsByClassName("bottom")[0].className += " active";
                         }
                     </script>
                     ';

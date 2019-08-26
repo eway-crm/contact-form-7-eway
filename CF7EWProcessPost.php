@@ -66,8 +66,31 @@ if (isset($_POST[ADD_FIELD]))
     $query = $wpdb->insert($table, array(FIELD_KEY => $_POST["wordpress"], FIELD_VALUE => $_POST["eway"]));
     if (!$query) {
         EchoError('Error when creating Contact form 7 eway extension custom field. Please try again.');
+        LogMsgAdmin("Error when creating Contact form 7 eway extension custom field.\n");
     } else {
-        EchoInfo('Contact form 7 eway extension custom field was succesfully created.');
+        EchoInfo('Contact form 7 eway extension custom field with name was succesfully created.');
+        LogMsgAdmin("Contact form 7 eway extension custom field with name was succesfully created.\n");
+    }
+}
+
+if (isset($_POST[RESTORE_DEFAULT]))
+{
+    global $wpdb;
+    $wpdb->query( "TRUNCATE TABLE ".$wpdb->prefix . "" . FIELDS_TABLE );
+    LogMsgAdmin("Custom fields were restored to default state.\n");
+}
+
+if (isset($_POST[DELETE_FIELD]))
+{
+    global $wpdb;
+    $table = $wpdb->prefix . "" . FIELDS_TABLE;
+    $query = $wpdb->delete($table, array(ID_FIELD => $_POST[DELETE_FIELD]));
+    if (!$query) {
+        EchoError('Error when deleting Contact form 7 eway extension custom field. Please try again.');
+        LogMsgAdmin("Error when deleting Contact form 7 eway extension custom field.\n");
+    } else {
+        EchoInfo('Contact form 7 eway extension custom field with name was succesfully deleted.');
+        LogMsgAdmin("Contact form 7 eway extension custom field with name was succesfully deleted.\n");
     }
 }
 
@@ -81,6 +104,12 @@ function EchoInfo($msg) {
     echo '<div style="margin: 10px; border: 2px solid green; padding: 10px;">';
     echo $msg;
     echo '</div>';
+}
+
+function LogMsgAdmin($msg) {
+    $fh = fopen('C:/wamp64/www/WordPress/wordpress/'.LOG_FILE, 'a') or die("can't open file");
+    fwrite($fh, $msg);
+    fclose($fh);
 }
 
 ?>

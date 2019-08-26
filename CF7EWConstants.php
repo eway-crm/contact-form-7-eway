@@ -36,4 +36,6 @@ define("ADMIN_PAGE",     "manage_eway_cf7_ext");
 define("SUBMIT_FIELD",     "sumbmit_ewayext_changes");
 define("LOGOUT_FIELD",     "log_out");
 define("ADD_FIELD",     "add_field");
+define("DELETE_FIELD",     "delete_field");
+define("RESTORE_DEFAULT",     "restore_default");
 ?>

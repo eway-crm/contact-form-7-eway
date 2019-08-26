@@ -31,6 +31,19 @@ function CreateEwayLead($cf7) {
                         'Note'      => $posted_data[CF_MESSAGE]
                     );
     
+	global $wpdb;
+    $fieldsTable = $wpdb->prefix . "" . FIELDS_TABLE;
+    $query = "SELECT * FROM " . $fieldsTable;
+	$fields = $wpdb->get_results($query, ARRAY_A);
+	
+	if($fields != null)
+	{
+		foreach($fields as $field)
+		{
+			$newLead += [$field['key'] => $field['value']];
+		}
+	}
+	
     try
 	{
         $result = $connector->saveLead($newLead);
