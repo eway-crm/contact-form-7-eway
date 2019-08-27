@@ -26,7 +26,7 @@ define("FIELD_KEY",     "key");
 define("FIELD_VALUE",   "value");
 
 //Labels
-define("TITLE",     "Extension for Contact Form 7");
+define("TITLE",     "eWay-CRM® Extension for Contact Form 7");
 define("SHORT_TITLE",     "eWay-CRM CF7 extension");
 define("F_TITLE",     "Fields for Contact Form 7 Extension");
 

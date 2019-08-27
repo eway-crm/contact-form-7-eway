@@ -77,6 +77,9 @@ if (isset($_POST[RESTORE_DEFAULT]))
 {
     global $wpdb;
     $wpdb->query( "TRUNCATE TABLE ".$wpdb->prefix . "" . FIELDS_TABLE );
+    $wpdb->insert($wpdb->prefix . "" . FIELDS_TABLE, array("your-email" => "Email"));
+    $wpdb->insert($wpdb->prefix . "" . FIELDS_TABLE, array("your-subject" => "FileAs"));
+    $wpdb->insert($wpdb->prefix . "" . FIELDS_TABLE, array("your-message" => "Note"));
     LogMsgAdmin("Custom fields were restored to default state.\n");
 }
 
@@ -84,7 +87,7 @@ if (isset($_POST[DELETE_FIELD]))
 {
     global $wpdb;
     $table = $wpdb->prefix . "" . FIELDS_TABLE;
-    $query = $wpdb->delete($table, array(ID_FIELD => $_POST[DELETE_FIELD]));
+    $query = $wpdb->delete($table, array(ID_FIELD => $_POST[ID_FIELD]));
     if (!$query) {
         EchoError('Error when deleting Contact form 7 eway extension custom field. Please try again.');
         LogMsgAdmin("Error when deleting Contact form 7 eway extension custom field.\n");
@@ -107,6 +110,7 @@ function EchoInfo($msg) {
 }
 
 function LogMsgAdmin($msg) {
+    $msg = date('Y-m-d h:i:s', time()).': '.$msg;
     $fh = fopen('C:/wamp64/www/WordPress/wordpress/'.LOG_FILE, 'a') or die("can't open file");
     fwrite($fh, $msg);
     fclose($fh);

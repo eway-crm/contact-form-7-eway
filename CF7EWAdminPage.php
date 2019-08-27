@@ -28,7 +28,8 @@ function getFields()
                     <tr>
                         <td>'.$key.'</td>
                         <td>'.$value.'</td>
-                        <td><input style="float:right; background-color: #0062AF;height:32px;width:108px; color: white; border: none;" type="submit" name="'.DELETE_FIELD.'" value="'.$id.'" placeholder="Delete" /></td>
+                        <td><input style="float:right; background-color: #0062AF;height:32px;width:108px; color: white; border: none;" type="submit" name="'.DELETE_FIELD.'" value="Delete Field" placeholder="Delete" /></td>
+                        <input type="hidden" name="id" value="'.$id.'">
                     </tr>
                     ';
     }
@@ -131,8 +132,8 @@ if ($r != null) {
                         </form>
                         
                         <div class="tab">
-                            <button class="tablinks active" onclick="openTab(event, \'History\')"><div class="bottom active">History</div></button>
-                            <button class="tablinks" onclick="openTab(event, \'Mapping\')"><div class="bottom">Mapping</div></button>
+                            <button class="tablinks active" id="btnHistory" onclick="openTab(\'History\')"><div class="bottom active">History</div></button>
+                            <button class="tablinks" id="btnMapping" onclick="openTab(\'Mapping\')"><div class="bottom">Mapping</div></button>
                         </div>
                         
                         <div id="History" class="tabcontent" style="display: block;">
@@ -144,7 +145,7 @@ if ($r != null) {
                         </div>
                         
                         <div id="Mapping" class="tabcontent">
-                            <form action="?page='.ADMIN_PAGE.'" method="post" >
+                            <form onload="" method="post" >
                             Here you can map your fields for the form.
                             <div style="min-height: 60px !important;padding-top: 25px;display: flex;vertical-align: center;">
                                 <div style="align-self: center;">WordPress Field <input name="wordpress" type="text"/></div>
@@ -168,31 +169,31 @@ if ($r != null) {
                     </div>
                     
                     <script>
-                        function openTab(evt, tabName){
+                        function openTab(tabName) {
                             var i, tabcontent, tablinks, btm;
                             btm = document.getElementsByClassName("bottom active");
                             btm[0].className = btm[0].className.replace(" active", "");
-                            evt.currentTarget.childNodes[0].className += " active";
                             tabcontent = document.getElementsByClassName("tabcontent");
                             for (i = 0; i < tabcontent.length; i++){
                                 tabcontent[i].style.display = "none";
                             }
                             tablinks = document.getElementsByClassName("tablinks");
-                            for(i = 0; i < tablinks.length; i++){
+                            for (i = 0; i < tablinks.length; i++) {
                                 tablinks[i].className = tablinks[i].className.replace(" active", "");
+                                if (tablinks[i].id == "btn" + tabName) {
+                                    tablinks[i].className += " active";
+                                    tablinks[i].childNodes[0].className += " active";
+                                }
                             }
                             document.getElementById(tabName).style.display = "block";
-                            evt.currentTarget.className += " active";
+                            location.hash = tabName;
                         }
-                        
-                        function stayOpen(){
-                            document.getElementById(Mapping).style.display = "block";
-                            document.getElementById(None).style.display = "block";
-                            document.getElementsByClassName("tablinks active")[0].className.replace(" active", "");
-                            document.getElementsByClassName("tablinks")[0].className += " active";
-                            document.getElementsByClassName("bottom active")[0].className.replace(" active", "");
-                            document.getElementsByClassName("bottom")[0].className += " active";
-                        }
+
+                        jQuery(document).ready(function() {
+                            if (location.hash != "") {
+                                openTab(location.hash.substring(1));
+                            }
+                        });
                     </script>
                     ';
     

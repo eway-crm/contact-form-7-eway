@@ -1,12 +1,12 @@
 <?php
 
 /*
- * Functions implementing eway lead creation
+ * Functions implementing eWay-CRM lead creation
  */
 
 require_once('eway.class.php');
 
-//Create lead in Eway database
+//Create lead in eWay-CRM database
 function CreateEwayLead($cf7) {
     
 	LogMsg("Sending form.\n");
@@ -25,13 +25,8 @@ function CreateEwayLead($cf7) {
     
     $connector = new eWayConnector($r[URL_FIELD], $r[USER_FIELD], $r[PWD_FIELD]);
     
-    $newLead = array(
-                        'FileAs'    => $posted_data[CF_SUBJECT],
-                        'Email'     => $posted_data[CF_MAIL],
-                        'Note'      => $posted_data[CF_MESSAGE]
-                    );
+    $newLead = array();
     
-	global $wpdb;
     $fieldsTable = $wpdb->prefix . "" . FIELDS_TABLE;
     $query = "SELECT * FROM " . $fieldsTable;
 	$fields = $wpdb->get_results($query, ARRAY_A);
@@ -40,7 +35,7 @@ function CreateEwayLead($cf7) {
 	{
 		foreach($fields as $field)
 		{
-			$newLead += [$field['key'] => $field['value']];
+			$newLead[$field['value']] = $posted_data[$field['key']];
 		}
 	}
 	
@@ -80,6 +75,7 @@ function ProcessError($msg) {
 }
 
 function LogMsg($msg) {
+	$msg = date('Y-m-d h:i:s', time()).': '.$msg;
     $fh = fopen(LOG_FILE, 'a') or die("can't open file");
     fwrite($fh, $msg);
     fclose($fh);

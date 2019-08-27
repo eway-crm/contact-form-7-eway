@@ -63,6 +63,10 @@ function CF7EWInstall() {
                                         UNIQUE KEY(" . ID_FIELD . ")
 					)";
     $wpdb->query($createFieldsTable);
+    
+    $wpdb->insert($fieldsTable, array("your-email" => "Email"));
+    $wpdb->insert($fieldsTable, array("your-subject" => "FileAs"));
+    $wpdb->insert($fieldsTable, array("your-message" => "Note"));
 }
 
 //Register deactivation plugin hook
