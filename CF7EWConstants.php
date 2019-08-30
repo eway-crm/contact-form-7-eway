@@ -1,4 +1,3 @@
-
 <?php
 /*
  * plugin constants
@@ -13,17 +12,18 @@ define("CF_MESSAGE",     "your-message");
 define("LOG_FILE",     "wp-content/plugins/contact-form-7-eway/log.txt");
 
 //DB constants
-define("SERVICE_TABLE",     "eway_cf7_extension");
+define("SERVICE_TABLE",     "eway_cf7_settings");
 define("FIELDS_TABLE",     "eway_cf7_fields");
 
 define("ID_FIELD",     "id");
+define("FIELD_ID",     "id");
 
 define("URL_FIELD",     "url");
 define("USER_FIELD",     "eway_user");
 define("PWD_FIELD",     "eway_password");
 
-define("FIELD_KEY",     "key");
-define("FIELD_VALUE",   "value");
+define("FIELD_KEY",     "field_key");
+define("FIELD_VALUE",   "field_value");
 
 //Labels
 define("TITLE",     "eWay-CRM® Extension for Contact Form 7");

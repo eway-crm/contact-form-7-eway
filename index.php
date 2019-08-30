@@ -1,9 +1,9 @@
 <?php
 
 /*
-  Plugin Name: Eway extension for Contact Form 7
+  Plugin Name: eWay-CRM® Extension for Contact Form 7
   Plugin URI: http://www.memos.cz
-  Description: Plugin provides ability to record leads to eWay database from contact form 7
+  Description: Plugin provides ability to record leads to eWay-CRM® database from contact form 7
   Version: 1.0
   Author: Jan Pavlovský for Memos Software s.r.o.
   License: Property of Memos Software s.r.o.
@@ -51,22 +51,22 @@ function CF7EWInstall() {
                                         " . USER_FIELD . " NVARCHAR(256),
                                         " . PWD_FIELD . " NVARCHAR(256),
                                         UNIQUE KEY(" . ID_FIELD . ")
-					)";    
-
-    $wpdb->query($createServiceTable);
-    
-    $createFieldsTable = "CREATE TABLE IF NOT EXISTS " . $fieldsTable . "
-                (
-                " . ID_FIELD . " INT NOT NULL AUTO_INCREMENT,
-                                    " . FIELD_KEY . " NVARCHAR(256),									
-                                    " . FIELD_VALUE . " NVARCHAR(256),
-                                        UNIQUE KEY(" . ID_FIELD . ")
 					)";
+    $createFieldsTable = "
+                    CREATE TABLE IF NOT EXISTS " . $fieldsTable . "
+                    (
+					" . ID_FIELD . " INT NOT NULL AUTO_INCREMENT,					
+                                        " . FIELD_KEY . " NVARCHAR(256),
+                                        " . FIELD_VALUE . " NVARCHAR(256),
+                                        UNIQUE KEY(" . ID_FIELD . ")
+					)
+                    ";    
+    $wpdb->query($createServiceTable);
     $wpdb->query($createFieldsTable);
     
-    $wpdb->insert($fieldsTable, array("your-email" => "Email"));
-    $wpdb->insert($fieldsTable, array("your-subject" => "FileAs"));
-    $wpdb->insert($fieldsTable, array("your-message" => "Note"));
+    $wpdb->insert($fieldsTable, array(FIELD_KEY => "your-email", FIELD_VALUE => "Email"));
+    $wpdb->insert($fieldsTable, array(FIELD_KEY => "your-subject", FIELD_VALUE => "FileAs"));
+    $wpdb->insert($fieldsTable, array(FIELD_KEY => "your-message", FIELD_VALUE => "Note"));
 }
 
 //Register deactivation plugin hook

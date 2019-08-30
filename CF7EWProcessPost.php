@@ -77,9 +77,9 @@ if (isset($_POST[RESTORE_DEFAULT]))
 {
     global $wpdb;
     $wpdb->query( "TRUNCATE TABLE ".$wpdb->prefix . "" . FIELDS_TABLE );
-    $wpdb->insert($wpdb->prefix . "" . FIELDS_TABLE, array("your-email" => "Email"));
-    $wpdb->insert($wpdb->prefix . "" . FIELDS_TABLE, array("your-subject" => "FileAs"));
-    $wpdb->insert($wpdb->prefix . "" . FIELDS_TABLE, array("your-message" => "Note"));
+    $wpdb->insert($wpdb->prefix . "" . FIELDS_TABLE, array(FIELD_KEY => "your-email", FIELD_VALUE => "Email"));
+    $wpdb->insert($wpdb->prefix . "" . FIELDS_TABLE, array(FIELD_KEY => "your-subject", FIELD_VALUE => "FileAs"));
+    $wpdb->insert($wpdb->prefix . "" . FIELDS_TABLE, array(FIELD_KEY => "your-message", FIELD_VALUE => "Note"));
     LogMsgAdmin("Custom fields were restored to default state.\n");
 }
 
