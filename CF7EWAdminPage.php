@@ -28,7 +28,7 @@ function getFields()
                     <tr>
                         <td>'.$key.'</td>
                         <td>'.$value.'</td>
-                        <td><input style="float:right; background-color: #0062AF;height:32px;width:108px; color: white; border: none;" type="submit" name="'.DELETE_FIELD.'" value="Delete Field" placeholder="Delete" /></td>
+                        <td><input  class="buttonStyle" style="float:right; background-color: #0062AF;height:32px;width:108px; color: white; border: none;" type="submit" name="'.DELETE_FIELD.'" value="Delete Field" placeholder="Delete" /></td>
                         <input type="hidden" name="id" value="'.$id.'">
                     </tr>
                     ';
@@ -102,6 +102,7 @@ if ($r != null) {
                             margin-top: 20px !important;
                             height: 100vh;
                             padding: 25px;
+                            overflow: auto;
                         }
                     
                         table {
@@ -113,6 +114,11 @@ if ($r != null) {
                             text-align: left;
                             padding: 8px;
                         }
+                        
+                        .buttonStyle:hover {
+                                            background-color: #004C89 !important;
+                                            cursor: pointer !important;
+                                       }
                           
                         tr:nth-child(even) {background-color: #f2f2f2;}
                     
@@ -126,7 +132,7 @@ if ($r != null) {
                             <div style="align-self: center;"><object data="./../wp-content/plugins/contact-form-7-eway/eWayCRM-Logo-Red.svg" type="image/svg+xml" height="60px"></object></div>
                             <div style="align-self: center;padding-left: 30px;color: #E43025;font-family: Segoe UI;font-size: 28px;font-weight: bold ;">'.TITLE.'</div>
                             <div style="align-self: center;padding-right: 30px;margin-left: auto;font-family: Segoe UI;font-size: 15px;">You are logged in as '.$r[USER_FIELD].'</div>
-                            <div style="align-self: center;float: right;"><input style="float:right; background-color: #0062AF;height:32px;width:108px; color: white; border: none;" type="submit" name="'.LOGOUT_FIELD.'" value="Log Out" /></div>
+                            <div style="align-self: center;float: right;"><input class="buttonStyle" style="float:right; background-color: #0062AF;height:32px;width:108px; color: white; border: none;" type="submit" name="'.LOGOUT_FIELD.'" value="Log Out" /></div>
                         </div>
                         
                         </form>
@@ -150,8 +156,8 @@ if ($r != null) {
                             <div style="min-height: 60px !important;padding-top: 25px;display: flex;vertical-align: center;">
                                 <div style="align-self: center;">WordPress Field <input name="wordpress" type="text"/></div>
                                 <div style="align-self: center;padding-left: 30px;">eWay Field <input name="eway" type="text"/></div>
-                                <div style="align-self: center;float: right;margin-left: 30px;"><input style="float:right; background-color: #0062AF;height:32px;width:108px; color: white; border: none;" type="submit" name="'.ADD_FIELD.'" value="Add Field"/></div>
-                                <div style="align-self: center;margin-left: auto;"><input style="float:right; background-color: #0062AF;height:32px;width:150px; color: white; border: none;" type="submit" name="'.RESTORE_DEFAULT.'" value="Restore to Default"/></div>
+                                <div style="align-self: center;float: right;margin-left: 30px;"><input class="buttonStyle" style="float:right; background-color: #0062AF;height:32px;width:108px; color: white; border: none;" type="submit" name="'.ADD_FIELD.'" value="Add Field"/></div>
+                                <div style="align-self: center;margin-left: auto;"><input class="buttonStyle" style="float:right; background-color: #0062AF;height:32px;width:150px; color: white; border: none;" type="submit" name="'.RESTORE_DEFAULT.'" value="Restore to Default"/></div>
                             </div>
                             <div class="content">
                                 <table>
@@ -202,54 +208,58 @@ if ($r != null) {
 else
 {
 
-    $htmlResult = "";
-    
-    $htmlResult .= '<form action="?page='.ADMIN_PAGE.'" method="post" >';
-    
-    $htmlResult .= '<div style="display: flex;align-items: center;justify-content: center;" vertical-align="middle">';
-    
-    $htmlResult .= '<div style="padding: 20px;display: inline-block;background-color: white;">';
-    
-    $htmlResult .= '<table cellspacing="2">';
-        $htmlResult .= "<tbody>";
-            $htmlResult .= "<tr>";
-                $htmlResult .= "<td style='height: 55px; width: 94px; padding: 10px;'>";
-                    $htmlResult .= '<object data="./../wp-content/plugins/contact-form-7-eway/eWayCRM-Logo-Red.svg" type="image/svg+xml" width="100%"></object>';
-                $htmlResult .= "</td>";
-                $htmlResult .= "<td>";
-                    $htmlResult .= '<h2 style="color: #E43025; padding-left: 30px;text-align:center;font-family: Segoe UI;">'.TITLE.'</h2>';
-                $htmlResult .= "</td>";
-            $htmlResult .= "</tr>";
-            $htmlResult .= "<tr>";
-                $htmlResult .= "<td colspan='2' style='padding: 10px;'>";
-                    $htmlResult .= '<input style="width: 100%;height: 40px;box-shadow: none;border: 0;outline: 0;background: transparent;border-bottom: 1px solid black;" type="text" name="'.URL_FIELD.'" placeholder="Web Service URL" />';
-                $htmlResult .= "</td>";
-            $htmlResult .= "</tr>";
-            $htmlResult .= "<tr>";
-                $htmlResult .= "<td colspan='2' style='padding: 10px;'>";
-                    $htmlResult .= '<input style="width: 100%;height: 40px;box-shadow: none;border: 0;outline: 0;background: transparent;border-bottom: 1px solid black;" type="text" name="'.USER_FIELD.'" placeholder="Username" />';
-                $htmlResult .= "</td>";
-            $htmlResult .= "</tr>";
-            $htmlResult .= "<tr>";
-                $htmlResult .= "<td colspan='2' style='padding: 10px;'>";
-                    $htmlResult .= '<input style="width: 100%;height: 40px;box-shadow: none;border: 0;outline: 0;background: transparent;border-bottom: 1px solid black;" type="password" name="'.PWD_FIELD.'" placeholder="Password" />';
-                $htmlResult .= "</td>";
-            $htmlResult .= "</tr>";
-            $htmlResult .= "<tr style='padding: 20px;'>";
-                $htmlResult .= "<td>";                    
-                $htmlResult .= "</td>";
-                $htmlResult .= "<td style='padding: 10px;'>";
-                    $htmlResult .= '<input style="float:right; background-color: #0062AF;height:32px;width:108px; color: white; border: none;" type="submit" name="'.SUBMIT_FIELD.'" value="Log In" />';
-                $htmlResult .= "</td>";
-            $htmlResult .= "</tr>";
-        $htmlResult .= "</tbody>";
-    $htmlResult .= "</table>";
-    
-    $htmlResult .= "</div>";
-    
-    $htmlResult .= "</div>";
-    
-    $htmlResult .= "</form>";
+    $htmlResult = '
+                    <style>
+                    
+                    .buttonStyle:hover {
+                                            background-color: #004C89 !important;
+                                            cursor: pointer;
+                                       }
+                    
+                    </style>
+                    
+                    <form action="?page='.ADMIN_PAGE.'" method="post" >   
+                    <div style="display: flex;align-items: center;justify-content: center;" vertical-align="middle">    
+                    <div style="padding: 20px;display: inline-block;background-color: white;">
+                    
+                    <table cellspacing="2">
+                        <tbody>
+                            <tr>
+                                <td style="height: 55px; width: 94px; padding: 10px;">
+                                    <object data="./../wp-content/plugins/contact-form-7-eway/eWayCRM-Logo-Red.svg" type="image/svg+xml" width="100%"></object>
+                                </td>
+                                <td>
+                                    <h2 style="color: #E43025; padding-left: 30px;text-align:center;font-family: Segoe UI;"> '.TITLE.' </h2>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="padding: 10px;">
+                                    <input style="text-align: start;width: 100%;height: 40px;box-shadow: none;border: 0;outline: 0;background: transparent;border-bottom: 1px solid black;" type="text" name='.URL_FIELD.' placeholder="Web Service URL" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="padding: 10px;">
+                                    <input style="width: 100%;height: 40px;box-shadow: none;border: 0;outline: 0;background: transparent;border-bottom: 1px solid black;" type="text" name='.USER_FIELD.' placeholder="Username" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="padding: 10px;">
+                                    <input style="width: 100%;height: 40px;box-shadow: none;border: 0;outline: 0;background: transparent;border-bottom: 1px solid black;" type="password" name='.PWD_FIELD.' placeholder="Password" />
+                                </td>
+                            </tr>
+                            <tr style="padding: 20px;">
+                                <td>                   
+                                </td>
+                                <td style="padding: 10px;">
+                                    <input class="buttonStyle" style="float:right; background-color: #0062AF;height:32px;width:108px; color: white; border: none;" type="submit" name='.SUBMIT_FIELD.' value="Log In" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    </div>    
+                    </div>
+                    </form>';
     
     echo $htmlResult;
 }

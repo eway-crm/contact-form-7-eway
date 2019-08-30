@@ -16,7 +16,6 @@ define("SERVICE_TABLE",     "eway_cf7_settings");
 define("FIELDS_TABLE",     "eway_cf7_fields");
 
 define("ID_FIELD",     "id");
-define("FIELD_ID",     "id");
 
 define("URL_FIELD",     "url");
 define("USER_FIELD",     "eway_user");
