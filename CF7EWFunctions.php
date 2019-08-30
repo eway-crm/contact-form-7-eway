@@ -7,7 +7,7 @@
 require_once('eway.class.php');
 
 //Create lead in eWay-CRM database
-function CreateEwayLead($cf7) {
+function CreateLead($cf7) {
     
 	LogMsg("Sending form.\n");
 	

@@ -32,7 +32,7 @@ add_action('wpcf7_mail_sent', 'CF7EWProcessLead');
 
 function CF7EWProcessLead($cf7) {
     //process eway lead recoring        
-    CreateEwayLead($cf7);
+    CreateLead($cf7);
 }
 
 //Register install plugin hook
