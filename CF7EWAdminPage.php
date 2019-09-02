@@ -17,8 +17,8 @@ function getFields()
     global $wpdb;
     $fieldsTable = $wpdb->prefix . "" . FIELDS_TABLE;
     $query = "SELECT * FROM " . $fieldsTable;
-    $fields = $wpdb->get_results($query, ARRAY_A);
-    foreach($fields as $field)
+    $fields = $wpdb->get_results( $query, ARRAY_A );
+    foreach ( $fields as $field )
     {
         $key = $field[FIELD_KEY];
         $value = $field[FIELD_VALUE];
@@ -38,9 +38,9 @@ function getFields()
 
 $table = $wpdb->prefix . "" . SERVICE_TABLE;
 $sql = "SELECT * FROM " . $table;
-$r = $wpdb->get_row($sql, ARRAY_A);
+$r = $wpdb->get_row( $sql, ARRAY_A );
 
-if ($r != null) {        
+if ( $r != null ) {        
     $urlField = $r[URL_FIELD];
     $userField = $r[USER_FIELD];
     $pwdField = $r[PWD_FIELD];
@@ -98,7 +98,8 @@ if ($r != null) {
                         .content{
                             font-family: Segoe UI;
                             font-size: 15px;
-                            border: 1px solid rgba(0, 0, 0, 0.6) !important;
+                            border: 1px solid;
+                            border-color: rgba(0, 0, 0, 0.6) !important;
                             margin-top: 20px !important;
                             height: 100vh;
                             padding: 25px;
@@ -116,9 +117,9 @@ if ($r != null) {
                         }
                         
                         .buttonStyle:hover {
-                                            background-color: #004C89 !important;
-                                            cursor: pointer !important;
-                                       }
+                            background-color: #004C89 !important;
+                            cursor: pointer !important;
+                        }
                           
                         tr:nth-child(even) {background-color: #f2f2f2;}
                     
@@ -128,11 +129,11 @@ if ($r != null) {
                     
                         <form action="?page='.ADMIN_PAGE.'" method="post" >
                     
-                        <div style="max-height: 60px !important;padding-left: 48px;padding-top: 25px;padding-right: 20px;display: flex;vertical-align: center;"> 
-                            <div style="align-self: center;"><object data="./../wp-content/plugins/contact-form-7-eway/eWayCRM-Logo-Red.svg" type="image/svg+xml" height="60px"></object></div>
+                        <div style="padding-left: 48px;padding-top: 25px;padding-right: 20px;display: flex;vertical-align: center;"> 
+                            <div style=""><object data="./../wp-content/plugins/contact-form-7-eway/eWayCRM-Logo-Red.svg" type="image/svg+xml" height="60px"></object></div>
                             <div style="align-self: center;padding-left: 30px;color: #E43025;font-family: Segoe UI;font-size: 28px;font-weight: bold ;">'.TITLE.'</div>
                             <div style="align-self: center;padding-right: 30px;margin-left: auto;font-family: Segoe UI;font-size: 15px;">You are logged in as '.$r[USER_FIELD].'</div>
-                            <div style="align-self: center;float: right;"><input class="buttonStyle" style="float:right; background-color: #0062AF;height:32px;width:108px; color: white; border: none;" type="submit" name="'.LOGOUT_FIELD.'" value="Log Out" /></div>
+                            <div style="align-self: center;float: right;"><input class="buttonStyle" style="background-color: #0062AF;height: 32px;width: 108px;color: white;border: none;" type="submit" name="'.LOGOUT_FIELD.'" value="Log Out" /></div>
                         </div>
                         
                         </form>
@@ -145,7 +146,7 @@ if ($r != null) {
                         <div id="History" class="tabcontent" style="display: block;">
                             <div>Below, find all attempts to save data into eWay-CRM.</div>
                             <div class="content">
-                                '.nl2br(file_get_contents("C:\wamp64\www\WordPress\wordpress\wp-content\plugins\contact-form-7-eway\log.txt")).'
+                                '.nl2br(file_get_contents(LOG_FILE)).'
                             </div>
                             <div style="min-height: 25px !important;"></div>
                         </div>
@@ -157,7 +158,7 @@ if ($r != null) {
                                 <div style="align-self: center;">WordPress Field <input name="wordpress" type="text"/></div>
                                 <div style="align-self: center;padding-left: 30px;">eWay Field <input name="eway" type="text"/></div>
                                 <div style="align-self: center;float: right;margin-left: 30px;"><input class="buttonStyle" style="float:right; background-color: #0062AF;height:32px;width:108px; color: white; border: none;" type="submit" name="'.ADD_FIELD.'" value="Add Field"/></div>
-                                <div style="align-self: center;margin-left: auto;"><input class="buttonStyle" style="float:right; background-color: #0062AF;height:32px;width:150px; color: white; border: none;" type="submit" name="'.RESTORE_DEFAULT.'" value="Restore to Default"/></div>
+                                <div style="align-self: center;margin-left: auto;"><input class="buttonStyle" style="background-color: #0062AF;height:32px;width:150px; color: white; border: none;" type="submit" name="'.RESTORE_DEFAULT.'" value="Restore to Default"/></div>
                             </div>
                             <div class="content">
                                 <table>
@@ -207,51 +208,68 @@ if ($r != null) {
 }
 else
 {
-
-    $htmlResult = '
+     $htmlResult = '
                     <style>
                     
+                    .buttonStyle {
+                        float: right;
+                        background-color: #0062AF;
+                        height: 32px;
+                        width: 108px;
+                        color: white;
+                        border: none;
+                    }
+                    
                     .buttonStyle:hover {
-                                            background-color: #004C89 !important;
-                                            cursor: pointer;
-                                       }
+                        background-color: #004C89 !important;
+                        cursor: pointer;
+                    }
+                    
+                    .input {
+                        width: 100%;
+                        height: 40px;
+                        box-shadow: none !important;
+                        border: 0 !important;
+                        background: transparent !important;
+                        border-bottom: 1px solid black !important;
+                    }
                     
                     </style>
                     
                     <form action="?page='.ADMIN_PAGE.'" method="post" >   
-                    <div style="display: flex;align-items: center;justify-content: center;" vertical-align="middle">    
+                    <div style="display: flex;align-items: center;justify-content: center;">    
                     <div style="padding: 20px;display: inline-block;background-color: white;">
                     
-                    <table cellspacing="2">
+                    <table>
                         <tbody>
                             <tr>
                                 <td style="height: 55px; width: 94px; padding: 10px;">
                                     <object data="./../wp-content/plugins/contact-form-7-eway/eWayCRM-Logo-Red.svg" type="image/svg+xml" width="100%"></object>
                                 </td>
                                 <td>
-                                    <h2 style="color: #E43025; padding-left: 30px;text-align:center;font-family: Segoe UI;"> '.TITLE.' </h2>
+                                    <h2 style="color: #E43025; padding-left: 30px;font-family: Segoe UI;"> '.TITLE.' </h2>
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="2" style="padding: 10px;">
-                                    <input style="text-align: start;width: 100%;height: 40px;box-shadow: none;border: 0;outline: 0;background: transparent;border-bottom: 1px solid black;" type="text" name='.URL_FIELD.' placeholder="Web Service URL" />
+                                    <input class="input" type="text" name='.URL_FIELD.' placeholder="Web Service URL" />
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="2" style="padding: 10px;">
-                                    <input style="width: 100%;height: 40px;box-shadow: none;border: 0;outline: 0;background: transparent;border-bottom: 1px solid black;" type="text" name='.USER_FIELD.' placeholder="Username" />
+                                    <input class="input" type="text" name='.USER_FIELD.' placeholder="Username" />
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="2" style="padding: 10px;">
-                                    <input style="width: 100%;height: 40px;box-shadow: none;border: 0;outline: 0;background: transparent;border-bottom: 1px solid black;" type="password" name='.PWD_FIELD.' placeholder="Password" />
+                                    <input class="input" type="password" name='.PWD_FIELD.' placeholder="Password" />
                                 </td>
                             </tr>
                             <tr style="padding: 20px;">
                                 <td>                   
                                 </td>
                                 <td style="padding: 10px;">
-                                    <input class="buttonStyle" style="float:right; background-color: #0062AF;height:32px;width:108px; color: white; border: none;" type="submit" name='.SUBMIT_FIELD.' value="Log In" />
+                                    <input class="buttonStyle" type="submit" name='.SUBMIT_FIELD.' value="Log In" />
                                 </td>
                             </tr>
                         </tbody>
