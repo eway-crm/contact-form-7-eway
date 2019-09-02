@@ -2,11 +2,10 @@
 
 /*
   Plugin Name: eWay-CRM® Extension for Contact Form 7
-  Plugin URI: http://www.memos.cz
-  Description: Plugin provides ability to record leads to eWay-CRM® database from contact form 7
-  Version: 1.0
-  Author: Jan Pavlovský for Memos Software s.r.o.
-  License: Property of Memos Software s.r.o.
+  Plugin URI: https://github.com/eway-crm/contact-form-7-eway
+  Description: Plugin provides ability to create Deals in eWay-CRM® from Contact Form 7 forms. 
+  Version: 1.1
+  Author: eWay System s.r.o.
  */
 
 require_once( "CF7EWConstants.php" );
@@ -70,6 +69,14 @@ function CF7EWInstall() {
     $wpdb->insert( $fieldsTable, array( FIELD_KEY => "your-email", FIELD_VALUE => "Email" ) );
     $wpdb->insert( $fieldsTable, array( FIELD_KEY => "your-subject", FIELD_VALUE => "FileAs" ) );
     $wpdb->insert( $fieldsTable, array( FIELD_KEY => "your-message", FIELD_VALUE => "Note" ) );
+}
+
+add_action( 'activated_plugin', 'CF7EWRedirect' );
+
+function CF7EWRedirect( $plugin ) {
+    if( $plugin == plugin_basename( __FILE__ ) ) {
+        exit( wp_redirect( admin_url( 'options-general.php?page"='.ADMIN_PAGE.'' ) ) );
+    }
 }
 
 //Register deactivation plugin hook

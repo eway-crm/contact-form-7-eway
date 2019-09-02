@@ -153,10 +153,10 @@ if ( $r != null ) {
                         
                         <div id="Mapping" class="tabcontent">
                             <form onload="" method="post" >
-                            Here you can map your fields for the form.
+                            Below, create mapping between WordPress and eWay-CRM fields.
                             <div style="min-height: 60px !important;padding-top: 25px;display: flex;vertical-align: center;">
                                 <div style="align-self: center;">WordPress Field <input name="wordpress" type="text"/></div>
-                                <div style="align-self: center;padding-left: 30px;">eWay Field <input name="eway" type="text"/></div>
+                                <div style="align-self: center;padding-left: 30px;">eWay-CRM Field <input name="eway" type="text"/></div>
                                 <div style="align-self: center;float: right;margin-left: 30px;"><input class="buttonStyle" style="float:right; background-color: #0062AF;height:32px;width:108px; color: white; border: none;" type="submit" name="'.ADD_FIELD.'" value="Add Field"/></div>
                                 <div style="align-self: center;margin-left: auto;"><input class="buttonStyle" style="background-color: #0062AF;height:32px;width:150px; color: white; border: none;" type="submit" name="'.RESTORE_DEFAULT.'" value="Restore to Default"/></div>
                             </div>
@@ -164,7 +164,7 @@ if ( $r != null ) {
                                 <table>
                                     <tr>
                                         <th>WordPress Field</th>
-                                        <th>eWay Field</th>
+                                        <th>eWay-CRM Field</th>
                                     </tr>
                                 '.getFields().'
                                 </table>
@@ -199,6 +199,7 @@ if ( $r != null ) {
                         jQuery(document).ready(function() {
                             if (location.hash != "") {
                                 openTab(location.hash.substring(1));
+                                document.location.href = "#top";
                             }
                         });
                     </script>
@@ -253,17 +254,17 @@ else
                             </tr>
                             <tr>
                                 <td colspan="2" style="padding: 10px;">
-                                    <input class="input" type="text" name='.URL_FIELD.' placeholder="Web Service URL" />
+                                    <input class="input" type="text" name='.URL_FIELD.' placeholder="Web Service URL" value="'.$_POST[URL_FIELD].'" />
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="2" style="padding: 10px;">
-                                    <input class="input" type="text" name='.USER_FIELD.' placeholder="Username" />
+                                    <input class="input" type="text" name='.USER_FIELD.' placeholder="Username" value="'.$_POST[USER_FIELD].'" />
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="2" style="padding: 10px;">
-                                    <input class="input" type="password" name='.PWD_FIELD.' placeholder="Password" />
+                                    <input class="input" type="password" name='.PWD_FIELD.' placeholder="Password" value="'.$_POST[PWD_FIELD].'" />
                                 </td>
                             </tr>
                             <tr style="padding: 20px;">

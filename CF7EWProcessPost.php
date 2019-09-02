@@ -116,7 +116,7 @@ function EchoInfo( $msg ) {
 
 function LogMsgAdmin( $msg ) {
     $msg = date( 'Y-m-d h:i:s', time() ).': '.$msg;
-    $fh = fopen( LOG_FILE, 'a' ) or die( "can't open file" );
+    $fh = fopen( LOG_FILE, 'c' ) or die( "can't open file" );
     fwrite( $fh, $msg );
     fclose( $fh );
 }
