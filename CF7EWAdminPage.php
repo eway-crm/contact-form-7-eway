@@ -226,6 +226,7 @@ else
                     }
                     
                     .input {
+                        padding: 0;
                         width: 100%;
                         height: 40px;
                         box-shadow: none !important;
