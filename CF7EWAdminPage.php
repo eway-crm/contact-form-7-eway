@@ -139,8 +139,8 @@ if ( $r != null ) {
                         </form>
                         
                         <div class="tab">
-                            <button class="tablinks active" id="btnHistory" onclick="openTab(\'History\')"><div class="bottom active">History</div></button>
-                            <button class="tablinks" id="btnMapping" onclick="openTab(\'Mapping\')"><div class="bottom">Mapping</div></button>
+                            <button class="tablinks active" id="btnHistory" onclick="openTab(\'History\', window.pageYOffset)"><div class="bottom active">History</div></button>
+                            <button class="tablinks" id="btnMapping" onclick="openTab(\'Mapping\', window.pageYOffset)"><div class="bottom">Mapping</div></button>
                         </div>
                         
                         <div id="History" class="tabcontent" style="display: block;">
@@ -176,7 +176,7 @@ if ( $r != null ) {
                     </div>
                     
                     <script>
-                        function openTab(tabName) {
+                        function openTab(tabName, offset) {
                             var i, tabcontent, tablinks, btm;
                             btm = document.getElementsByClassName("bottom active");
                             btm[0].className = btm[0].className.replace(" active", "");
@@ -194,14 +194,25 @@ if ( $r != null ) {
                             }
                             document.getElementById(tabName).style.display = "block";
                             location.hash = tabName;
+                            keepLocation(offset);
                         }
 
                         jQuery(document).ready(function() {
                             if (location.hash != "") {
                                 openTab(location.hash.substring(1));
-                                document.location.href = "#top";
+                                window.scrollTo(0, 0);
                             }
                         });
+                        
+                        function keepLocation(oldOffset) {
+                            if (window.pageYOffset!= null){
+                              st=oldOffset;
+                            }
+                            if (document.body.scrollWidth!= null){
+                              st=oldOffset;
+                            }
+                            setTimeout("window.scrollTo(0,st)",10);
+                          }
                     </script>
                     ';
     
