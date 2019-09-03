@@ -69,6 +69,10 @@ function CF7EWInstall() {
     $wpdb->insert( $fieldsTable, array( FIELD_KEY => "your-email", FIELD_VALUE => "Email" ) );
     $wpdb->insert( $fieldsTable, array( FIELD_KEY => "your-subject", FIELD_VALUE => "FileAs" ) );
     $wpdb->insert( $fieldsTable, array( FIELD_KEY => "your-message", FIELD_VALUE => "Note" ) );
+    
+    $fh = fopen(LOG_FILE, 'a');
+    fwrite($fh, "Log file created.\n");
+    fclose($fh);
 }
 
 add_action( 'activated_plugin', 'CF7EWRedirect' );

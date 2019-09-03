@@ -9,7 +9,7 @@ define( "CF_SUBJECT",       "your-subject" ); //req
 define( "CF_MESSAGE",       "your-message" );
 
 //Application params
-define( "LOG_FILE",         "C:/wamp64/www/WordPress/wordpress/wp-content/plugins/contact-form-7-eway/log.txt" );
+define( "LOG_FILE",         dirname(__FILE__)."/log.txt" );
 
 //DB constants
 define( "SERVICE_TABLE",    "eway_cf7_settings" );

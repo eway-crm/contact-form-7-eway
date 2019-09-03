@@ -76,10 +76,7 @@ function ProcessError( $msg ) {
 }
 
 function LogMsg( $msg ) {
-	$msg = date( 'Y-m-d h:i:s', time() ).': '.$msg;
-    $fh = fopen( LOG_FILE, 'c' ) or die( "can't open file" );
-    fwrite( $fh, $msg );
-    fclose( $fh );
+	file_put_contents(LOG_FILE, date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ).': '.$msg . file_get_contents(LOG_FILE));
 }
 
 ?>

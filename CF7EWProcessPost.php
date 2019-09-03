@@ -40,14 +40,14 @@ if ( isset( $_POST[SUBMIT_FIELD] ) ) {
             $data = array( URL_FIELD => $url, USER_FIELD => $user, PWD_FIELD => $password );        
             $query = $wpdb->insert( $table, $data );        
             if ( !$query ) {
-                EchoError( 'Error when creating Contact form 7 eway extension parameters. Please try again.' );
+                EchoError( 'Error when creating Contact form 7 eWay-CRM extension parameters. Please try again.' );
             }
             else {
-                EchoInfo( 'Contact form 7 eway extension parameters were succesfully created.' );
+                EchoInfo( 'Contact form 7 eway extension parameters eWay-CRM succesfully created.' );
             }
         }
         else {
-            EchoError( 'Error when updating Contact form 7 eway extension parameters. Please check database consistency.' );
+            EchoError( 'Error when updating Contact form 7 eWay-CRM extension parameters. Please check database consistency.' );
         }
     }
     catch( Exception $e ){
@@ -68,12 +68,12 @@ if ( isset( $_POST[ADD_FIELD] ) )
     $table = $wpdb->prefix . "" . FIELDS_TABLE;
     $query = $wpdb->insert( $table, array( FIELD_KEY => $_POST["wordpress"], FIELD_VALUE => $_POST["eway"] ) );
     if ( !$query ) {
-        EchoError( 'Error when creating Contact form 7 eway extension custom field. Please try again.' );
-        LogMsgAdmin( "Error when creating Contact form 7 eway extension custom field.\n" );
+        EchoError( 'Error when creating Contact form 7 eWay-CRM extension custom field. Please try again.' );
+        LogMsgAdmin( "Error when creating Contact form 7 eWay-CRM extension custom field.\n" );
     }
     else {
-        EchoInfo( 'Contact form 7 eway extension custom field with name was succesfully created.' );
-        LogMsgAdmin( "Contact form 7 eway extension custom field with name was succesfully created.\n" );
+        EchoInfo( 'Contact form 7 eWay-CRM extension custom field was succesfully created.' );
+        LogMsgAdmin( "Contact form 7 eWay-CRM extension custom field was succesfully created.\n" );
     }
 }
 
@@ -93,12 +93,12 @@ if ( isset( $_POST[DELETE_FIELD] ) )
     $table = $wpdb->prefix . "" . FIELDS_TABLE;
     $query = $wpdb->delete( $table, array( ID_FIELD => $_POST[ID_FIELD] ) );
     if ( !$query ) {
-        EchoError( 'Error when deleting Contact form 7 eway extension custom field. Please try again.' );
-        LogMsgAdmin( "Error when deleting Contact form 7 eway extension custom field.\n" );
+        EchoError( 'Error when deleting Contact form 7 eWay-CRM extension custom field. Please try again.' );
+        LogMsgAdmin( "Error when deleting Contact form 7 eWay-CRM extension custom field.\n" );
     }
     else {
-        EchoInfo( 'Contact form 7 eway extension custom field with name was succesfully deleted.' );
-        LogMsgAdmin( "Contact form 7 eway extension custom field with name was succesfully deleted.\n" );
+        EchoInfo( 'Contact form 7 eWay-CRM extension custom field was succesfully deleted.' );
+        LogMsgAdmin( "Contact form 7 eWay-CRM extension custom field was succesfully deleted.\n" );
     }
 }
 
@@ -115,10 +115,7 @@ function EchoInfo( $msg ) {
 }
 
 function LogMsgAdmin( $msg ) {
-    $msg = date( 'Y-m-d h:i:s', time() ).': '.$msg;
-    $fh = fopen( LOG_FILE, 'c' ) or die( "can't open file" );
-    fwrite( $fh, $msg );
-    fclose( $fh );
+    file_put_contents(LOG_FILE, date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ).': '.$msg . file_get_contents(LOG_FILE));
 }
 
 ?>
