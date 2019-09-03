@@ -196,13 +196,6 @@ if ( $r != null ) {
                             location.hash = tabName;
                             keepLocation(offset);
                         }
-
-                        jQuery(document).ready(function() {
-                            if (location.hash != "") {
-                                openTab(location.hash.substring(1));
-                                window.scrollTo(0, 0);
-                            }
-                        });
                         
                         function keepLocation(oldOffset) {
                             if (window.pageYOffset!= null){
