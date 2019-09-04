@@ -139,8 +139,8 @@ if ( $r != null ) {
                         </form>
                         
                         <div class="tab">
-                            <button class="tablinks active" id="btnHistory" onclick="openTab(\'History\', window.pageYOffset)"><div class="bottom active">History</div></button>
-                            <button class="tablinks" id="btnMapping" onclick="openTab(\'Mapping\', window.pageYOffset)"><div class="bottom">Mapping</div></button>
+                            <button class="tablinks active" id="btnHistory" onclick="openTab(\'History\', window.pageYOffset); return false;"><div class="bottom active">History</div></button>
+                            <button class="tablinks" id="btnMapping" onclick="openTab(\'Mapping\', window.pageYOffset); return false;"><div class="bottom">Mapping</div></button>
                         </div>
                         
                         <div id="History" class="tabcontent" style="display: block;">
@@ -193,19 +193,14 @@ if ( $r != null ) {
                                 }
                             }
                             document.getElementById(tabName).style.display = "block";
-                            location.hash = tabName;
-                            keepLocation(offset);
+                            location.hash = "t" + tabName;
                         }
-                        
-                        function keepLocation(oldOffset) {
-                            if (window.pageYOffset!= null){
-                              st=oldOffset;
+                          
+                        jQuery(document).ready(function() {
+                            if (location.hash != "") {
+                                openTab(location.hash.substring(2));
                             }
-                            if (document.body.scrollWidth!= null){
-                              st=oldOffset;
-                            }
-                            setTimeout("window.scrollTo(0,st)",10);
-                          }
+                        });
                     </script>
                     ';
     
