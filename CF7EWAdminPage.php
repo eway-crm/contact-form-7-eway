@@ -139,8 +139,8 @@ if ( $r != null ) {
                         </form>
                         
                         <div class="tab">
-                            <button class="tablinks active" id="btnHistory" onclick="openTab(\'History\', window.pageYOffset); return false;"><div class="bottom active">History</div></button>
-                            <button class="tablinks" id="btnMapping" onclick="openTab(\'Mapping\', window.pageYOffset); return false;"><div class="bottom">Mapping</div></button>
+                            <button class="tablinks active" id="btnHistory" onclick="openTab(\'History\', window.pageYOffset);"><div class="bottom active">History</div></button>
+                            <button class="tablinks" id="btnMapping" onclick="openTab(\'Mapping\', window.pageYOffset);"><div class="bottom">Mapping</div></button>
                         </div>
                         
                         <div id="History" class="tabcontent" style="display: block;">
