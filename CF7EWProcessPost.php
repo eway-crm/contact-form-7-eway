@@ -1,17 +1,19 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 /*
  * Process updates in Contact form 7 Eway extension plugin
  */
 
 
-if ( isset( $_POST[SUBMIT_FIELD] ) ) {
+if ( isset( $_POST[CF7EW_SUBMIT_FIELD] ) ) {
     global $wpdb;
-    $table = $wpdb->prefix . "" . SERVICE_TABLE;
+    $table = $wpdb->prefix . "" . CF7EW_SERVICE_TABLE;
     
-    $url = addslashes( $_POST[URL_FIELD] );
-    $user = addslashes( $_POST[USER_FIELD] );
-    $password = addslashes( $_POST[PWD_FIELD] );
+    $url = addslashes( $_POST[CF7EW_URL_FIELD] );
+    $user = addslashes( $_POST[CF7EW_USER_FIELD] );
+    $password = addslashes( $_POST[CF7EW_PWD_FIELD] );
 
     try
     {
@@ -37,85 +39,85 @@ if ( isset( $_POST[SUBMIT_FIELD] ) ) {
         $r = $wpdb->get_row( $sql, ARRAY_A );
     
         if ( $wpdb->num_rows == 0 ) {                
-            $data = array( URL_FIELD => $url, USER_FIELD => $user, PWD_FIELD => $password );        
+            $data = array( CF7EW_URL_FIELD => $url, CF7EW_USER_FIELD => $user, CF7EW_PWD_FIELD => $password );        
             $query = $wpdb->insert( $table, $data );        
             if ( !$query ) {
-                EchoError( 'Error when creating Contact form 7 eWay-CRM extension parameters. Please try again.' );
+                CF7EWEchoError( 'Error when creating Contact form 7 eWay-CRM extension parameters. Please try again.' );
             }
             else {
-                EchoInfo( 'Contact form 7 eway extension parameters eWay-CRM succesfully created.' );
+                CF7EWEchoInfo( 'Contact form 7 eway extension parameters eWay-CRM succesfully created.' );
             }
         }
         else {
-            EchoError( 'Error when updating Contact form 7 eWay-CRM extension parameters. Please check database consistency.' );
+            CF7EWEchoError( 'Error when updating Contact form 7 eWay-CRM extension parameters. Please check database consistency.' );
         }
     }
     catch( Exception $e ){
-        EchoError( $e->getMessage() );
+        CF7EWEchoError( $e->getMessage() );
     }
    
 }
 
-if (isset( $_POST[LOGOUT_FIELD]) )
+if (isset( $_POST[CF7EW_LOGOUT_FIELD]) )
 {
     global $wpdb;
-    $wpdb->query( "TRUNCATE TABLE ".$wpdb->prefix . "" . SERVICE_TABLE );   
+    $wpdb->query( "TRUNCATE TABLE ".$wpdb->prefix . "" . CF7EW_SERVICE_TABLE );   
 }
 
-if ( isset( $_POST[ADD_FIELD] ) )
+if ( isset( $_POST[CF7EW_ADD_FIELD] ) )
 {
     global $wpdb;
-    $table = $wpdb->prefix . "" . FIELDS_TABLE;
-    $query = $wpdb->insert( $table, array( FIELD_KEY => $_POST["wordpress"], FIELD_VALUE => $_POST["eway"] ) );
+    $table = $wpdb->prefix . "" . CF7EW_FIELDS_TABLE;
+    $query = $wpdb->insert( $table, array( CF7EW_FIELD_KEY => $_POST["wordpress"], CF7EW_FIELD_VALUE => $_POST["eway"] ) );
     if ( !$query ) {
-        EchoError( 'Error when creating Contact form 7 eWay-CRM extension custom field. Please try again.' );
-        LogMsgAdmin( "Error when creating Contact form 7 eWay-CRM extension custom field.\n" );
+        CF7EWEchoError( 'Error when creating Contact form 7 eWay-CRM extension custom field. Please try again.' );
+        CF7EWLogMsgAdmin( "Error when creating Contact form 7 eWay-CRM extension custom field.\n" );
     }
     else {
-        EchoInfo( 'Contact form 7 eWay-CRM extension custom field was succesfully created.' );
-        LogMsgAdmin( "Contact form 7 eWay-CRM extension custom field was succesfully created.\n" );
+        CF7EWEchoInfo( 'Contact form 7 eWay-CRM extension custom field was succesfully created.' );
+        CF7EWLogMsgAdmin( "Contact form 7 eWay-CRM extension custom field was succesfully created.\n" );
     }
 }
 
-if ( isset( $_POST[RESTORE_DEFAULT] ) )
+if ( isset( $_POST[CF7EW_RESTORE_DEFAULT] ) )
 {
     global $wpdb;
-    $wpdb->query( "TRUNCATE TABLE ".$wpdb->prefix . "" . FIELDS_TABLE );
-    $wpdb->insert( $wpdb->prefix . "" . FIELDS_TABLE, array( FIELD_KEY => "your-email", FIELD_VALUE => "Email" ) );
-    $wpdb->insert( $wpdb->prefix . "" . FIELDS_TABLE, array( FIELD_KEY => "your-subject", FIELD_VALUE => "FileAs" ) );
-    $wpdb->insert( $wpdb->prefix . "" . FIELDS_TABLE, array( FIELD_KEY => "your-message", FIELD_VALUE => "Note" ) );
-    LogMsgAdmin( "Custom fields were restored to default state.\n" );
+    $wpdb->query( "TRUNCATE TABLE ".$wpdb->prefix . "" . CF7EW_FIELDS_TABLE );
+    $wpdb->insert( $wpdb->prefix . "" . CF7EW_FIELDS_TABLE, array( CF7EW_FIELD_KEY => "your-email",     CF7EW_FIELD_VALUE => "Email" ) );
+    $wpdb->insert( $wpdb->prefix . "" . CF7EW_FIELDS_TABLE, array( CF7EW_FIELD_KEY => "your-subject",   CF7EW_FIELD_VALUE => "FileAs" ) );
+    $wpdb->insert( $wpdb->prefix . "" . CF7EW_FIELDS_TABLE, array( CF7EW_FIELD_KEY => "your-message",   CF7EW_FIELD_VALUE => "Note" ) );
+    CF7EWLogMsgAdmin( "Custom fields were restored to default state.\n" );
 }
 
-if ( isset( $_POST[DELETE_FIELD] ) )
+if ( isset( $_POST[CF7EW_DELETE_FIELD] ) )
 {
     global $wpdb;
-    $table = $wpdb->prefix . "" . FIELDS_TABLE;
-    $query = $wpdb->delete( $table, array( ID_FIELD => $_POST[ID_FIELD] ) );
+    $table = $wpdb->prefix . "" . CF7EW_FIELDS_TABLE;
+    $query = $wpdb->delete( $table, array( CF7EW_ID_FIELD => $_POST[CF7EW_ID_FIELD] ) );
     if ( !$query ) {
-        EchoError( 'Error when deleting Contact form 7 eWay-CRM extension custom field. Please try again.' );
-        LogMsgAdmin( "Error when deleting Contact form 7 eWay-CRM extension custom field.\n" );
+        CF7EWEchoError( 'Error when deleting Contact form 7 eWay-CRM extension custom field. Please try again.' );
+        CF7EWLogMsgAdmin( "Error when deleting Contact form 7 eWay-CRM extension custom field.\n" );
     }
     else {
-        EchoInfo( 'Contact form 7 eWay-CRM extension custom field was succesfully deleted.' );
-        LogMsgAdmin( "Contact form 7 eWay-CRM extension custom field was succesfully deleted.\n" );
+        CF7EWEchoInfo( 'Contact form 7 eWay-CRM extension custom field was succesfully deleted.' );
+        CF7EWLogMsgAdmin( "Contact form 7 eWay-CRM extension custom field was succesfully deleted.\n" );
     }
 }
 
-function EchoError( $msg ) {
+function CF7EWEchoError( $msg ) {
     echo '<div style="margin: 10px; border: 2px solid red; padding: 10px;">';
     echo $msg;
     echo '</div>';
 }
 
-function EchoInfo( $msg ) {
+function CF7EWEchoInfo( $msg ) {
     echo '<div style="margin: 10px; border: 2px solid green; padding: 10px;">';
     echo $msg;
     echo '</div>';
 }
 
-function LogMsgAdmin( $msg ) {
-    file_put_contents(LOG_FILE, date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ).': '.$msg . file_get_contents(LOG_FILE));
+function CF7EWLogMsgAdmin( $msg ) {
+    file_put_contents(CF7EW_LOG_FILE, date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ).': '.$msg . file_get_contents(CF7EW_LOG_FILE));
 }
 
 ?>

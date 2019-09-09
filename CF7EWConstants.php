@@ -1,39 +1,37 @@
 <?php
 /*
  * plugin constants
- */ 
- 
-//Contact form params
-define( "CF_MAIL",          "your-email" ); //req
-define( "CF_SUBJECT",       "your-subject" ); //req
-define( "CF_MESSAGE",       "your-message" );
+ */
+
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 //Application params
-define( "LOG_FILE",         dirname(__FILE__)."/log.txt" );
+define( "CF7EW_LOG_FILE",           dirname(__FILE__)."\CF7EWLog.txt" );
+define( "CF7EW_ICON_FILE",          dirname(__FILE__)."\CF7EWLogo.svg" );
 
 //DB constants
-define( "SERVICE_TABLE",    "eway_cf7_settings" );
-define( "FIELDS_TABLE",     "eway_cf7_fields" );
+define( "CF7EW_USER_TABLE",         "eway_cf7_settings" );
+define( "CF7EW_FIELDS_TABLE",       "eway_cf7_fields" );
 
-define( "ID_FIELD",         "id" );
+define( "CF7EW_ID_FIELD",           "id" );
 
-define( "URL_FIELD",        "url" );
-define( "USER_FIELD",       "eway_user" );
-define( "PWD_FIELD",        "eway_password" );
+define( "CF7EW_URL_FIELD",          "url" );
+define( "CF7EW_USER_FIELD",         "eway_user" );
+define( "CF7EW_PWD_FIELD",          "eway_password" );
 
-define( "FIELD_KEY",        "field_key" );
-define( "FIELD_VALUE",      "field_value" );
+define( "CF7EW_FIELD_KEY",          "field_key" );
+define( "CF7EW_FIELD_VALUE",        "field_value" );
 
 //Labels
-define( "TITLE",            "eWay-CRM® Extension for Contact Form 7" );
-define( "SHORT_TITLE",      "eWay-CRM CF7 Extension" );
+define( "CF7EW_TITLE",              "eWay-CRM® Extension for Contact Form 7" );
+define( "CF7EW_SHORT_TITLE",        "eWay-CRM CF7 Extension" );
 
-define( "ADMIN_PAGE",       "manage_eway_cf7_ext" );
+define( "CF7EW_ADMIN_PAGE",         "manage_eway_cf7_ext" );
 
 //Administration form params
-define( "SUBMIT_FIELD",     "sumbmit_ewayext_changes" );
-define( "LOGOUT_FIELD",     "log_out" );
-define( "ADD_FIELD",        "add_field" );
-define( "DELETE_FIELD",     "delete_field" );
-define( "RESTORE_DEFAULT",  "restore_default" );
+define( "CF7EW_SUBMIT_FIELD",       "sumbmit_ewayext_changes" );
+define( "CF7EW_LOGOUT_FIELD",       "log_out" );
+define( "CF7EW_ADD_FIELD",          "add_field" );
+define( "CF7EW_DELETE_FIELD",       "delete_field" );
+define( "CF7EW_RESTORE_DEFAULT",    "restore_default" );
 ?>

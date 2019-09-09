@@ -8,6 +8,8 @@
   Author: eWay System s.r.o.
  */
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 require_once( "CF7EWConstants.php" );
 
 require_once( "CF7EWFunctions.php" );
@@ -18,7 +20,7 @@ add_action( 'admin_menu', 'CF7EWMenu' );
 // Manage plugin adnimnistration page and menu item
 function CF7EWMenu() {
     //add options page to wp admin section
-    add_options_page( TITLE, SHORT_TITLE, administrator, ADMIN_PAGE, 'CF7EOptions' );
+    add_options_page( CF7EW_TITLE, CF7EW_SHORT_TITLE, administrator, CF7EW_ADMIN_PAGE, 'CF7EOptions' );
 }
 
 // Render plugin administration page
@@ -31,7 +33,7 @@ add_action( 'wpcf7_mail_sent', 'CF7EWProcessLead' );
 
 function CF7EWProcessLead( $cf7 ) {
     // Process eWay-CRM lead recoring        
-    CreateLead( $cf7 );
+    CF7EWCreateLead( $cf7 );
 }
 
 // Register install plugin hook
@@ -40,37 +42,37 @@ register_activation_hook( __FILE__, 'CF7EWInstall' );
 function CF7EWInstall() {
     // Add to db on install
     global $wpdb;
-    $serviceTable = $wpdb->prefix . "" . SERVICE_TABLE;
-    $fieldsTable = $wpdb->prefix . "" . FIELDS_TABLE;
+    $serviceTable = $wpdb->prefix . "" . CF7EW_SERVICE_TABLE;
+    $fieldsTable = $wpdb->prefix . "" . CF7EW_FIELDS_TABLE;
 
     // Operation tables creation
     $createServiceTable = "CREATE TABLE IF NOT EXISTS " . $serviceTable . "
 					(
-					" . ID_FIELD . " INT NOT NULL AUTO_INCREMENT,			
-					" . URL_FIELD . " NVARCHAR(256),			
-                    " . USER_FIELD . " NVARCHAR(256),
-                    " . PWD_FIELD . " NVARCHAR(256),
-                    UNIQUE KEY(" . ID_FIELD . ")
+					" . CF7EW_ID_FIELD . " INT NOT NULL AUTO_INCREMENT,			
+					" . CF7EW_URL_FIELD . " NVARCHAR(256),			
+                    " . CF7EW_USER_FIELD . " NVARCHAR(256),
+                    " . CF7EW_PWD_FIELD . " NVARCHAR(256),
+                    UNIQUE KEY(" . CF7EW_ID_FIELD . ")
 					)";
                     
     $createFieldsTable = "
                     CREATE TABLE IF NOT EXISTS " . $fieldsTable . "
                     (
-					" . ID_FIELD . " INT NOT NULL AUTO_INCREMENT,					
-                    " . FIELD_KEY . " NVARCHAR(256),
-                    " . FIELD_VALUE . " NVARCHAR(256),
-                    UNIQUE KEY(" . ID_FIELD . ")
+					" . CF7EW_ID_FIELD . " INT NOT NULL AUTO_INCREMENT,					
+                    " . CF7EW_FIELD_KEY . " NVARCHAR(256),
+                    " . CF7EW_FIELD_VALUE . " NVARCHAR(256),
+                    UNIQUE KEY(" . CF7EW_ID_FIELD . ")
 					)";
                     
     $wpdb->query( $createServiceTable );
     $wpdb->query( $createFieldsTable );
     
     // Fill default fields
-    $wpdb->insert( $fieldsTable, array( FIELD_KEY => "your-email", FIELD_VALUE => "Email" ) );
-    $wpdb->insert( $fieldsTable, array( FIELD_KEY => "your-subject", FIELD_VALUE => "FileAs" ) );
-    $wpdb->insert( $fieldsTable, array( FIELD_KEY => "your-message", FIELD_VALUE => "Note" ) );
+    $wpdb->insert( $fieldsTable, array( CF7EW_FIELD_KEY => "your-email",    CF7EW_FIELD_VALUE => "Email" ) );
+    $wpdb->insert( $fieldsTable, array( CF7EW_FIELD_KEY => "your-subject",  CF7EW_FIELD_VALUE => "FileAs" ) );
+    $wpdb->insert( $fieldsTable, array( CF7EW_FIELD_KEY => "your-message",  CF7EW_FIELD_VALUE => "Note" ) );
     
-    $fh = fopen(LOG_FILE, 'a');
+    $fh = fopen(CF7EW_LOG_FILE, 'a');
     fwrite($fh, "Log file created.\n");
     fclose($fh);
 }
@@ -79,7 +81,7 @@ add_action( 'activated_plugin', 'CF7EWRedirect' );
 
 function CF7EWRedirect( $plugin ) {
     if( $plugin == plugin_basename( __FILE__ ) ) {
-        exit( wp_redirect( admin_url( 'options-general.php?page"='.ADMIN_PAGE.'' ) ) );
+        exit( wp_redirect( admin_url( 'options-general.php?page"='.CF7EW_ADMIN_PAGE.'' ) ) );
     }
 }
 
@@ -95,11 +97,11 @@ function CF7EWDeactivate() {
 
     //remove database
     global $wpdb;
-    $table = $wpdb->prefix . "" . SERVICE_TABLE;
+    $table = $wpdb->prefix . "" . CF7EW_SERVICE_TABLE;
     $drop_table = "DROP TABLE " . $table;
     $wpdb->query( $drop_table );
     
-    $table = $wpdb->prefix . "" . FIELDS_TABLE;
+    $table = $wpdb->prefix . "" . CF7EW_FIELDS_TABLE;
     $drop_table = "DROP TABLE " . $table;
     $wpdb->query( $drop_table );
 }

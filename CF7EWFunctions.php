@@ -1,5 +1,7 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 /*
  * Functions implementing eWay-CRM lead creation
  */
@@ -7,9 +9,9 @@
 require_once( 'eway.class.php' );
 
 //Create lead in eWay-CRM database
-function CreateLead( $cf7 ) {
+function CF7EWCreateLead( $cf7 ) {
     
-	LogMsg( "Sending form.\n" );
+	CF7EWLogMsg( "Sending form.\n" );
 	
     //Get contact form fields    
     $submission = WPCF7_Submission::get_instance();
@@ -19,15 +21,15 @@ function CreateLead( $cf7 ) {
     }
 
     global $wpdb;
-    $table = $wpdb->prefix . "" . SERVICE_TABLE;
+    $table = $wpdb->prefix . "" . CF7EW_SERVICE_TABLE;
     $sql = "SELECT * FROM " . $table;
     $r = $wpdb->get_row( $sql, ARRAY_A );
     
-    $connector = new eWayConnector( $r[URL_FIELD], $r[USER_FIELD], $r[PWD_FIELD] );
+    $connector = new eWayConnector( $r[CF7EW_URL_FIELD], $r[CF7EW_USER_FIELD], $r[CF7EW_PWD_FIELD] );
     
     $newLead = array();
     
-    $fieldsTable = $wpdb->prefix . "" . FIELDS_TABLE;
+    $fieldsTable = $wpdb->prefix . "" . CF7EW_FIELDS_TABLE;
     $query = "SELECT * FROM " . $fieldsTable;
 	$fields = $wpdb->get_results( $query, ARRAY_A );
 	
@@ -43,17 +45,17 @@ function CreateLead( $cf7 ) {
 	{
         $result = $connector->saveLead( $newLead );
 		if ( $result->ReturnCode == 'rcSuccess' ){
-			LogMsg( "Website: Creation of lead: ". $posted_data[CF_SUBJECT] ." in eWay via API was successful.\n" );
+			CF7EWLogMsg( "Website: Creation of lead: ". $posted_data['FileAs'] ." in eWay via API was successful.\n" );
 		}
     }
 	catch ( Exception $e ) {
-        LogMsg( "Website: Creation of lead: ". $posted_data[CF_SUBJECT] ." in eWay via API was unsuccessful.\n" );
+        CF7EWLogMsg( "Website: Creation of lead: ". $posted_data['FileAs'] ." in eWay via API was unsuccessful.\n" );
         return;
     }
 }
 
 //Process errors
-function ProcessError( $msg ) {
+function CF7EWProcessError( $msg ) {
     global $wpdb;
 
     //Get web host
@@ -65,18 +67,17 @@ function ProcessError( $msg ) {
         $web = $_SERVER['HTTP_HOST'];
     }
 
-
     $q = "SELECT user_email FROM " . $wpdb->prefix . "users WHERE ID = 1";
     $admin_email = $wpdb->get_var( $q );
 
     $error = $web . " - " . date( "d.m.Y G:i:s", Time() ) . ": " . $msg . "\n";
 
     //create error log
-    LogMsg( $error );
+    CF7EWLogMsg( $error );
 }
 
-function LogMsg( $msg ) {
-	file_put_contents(LOG_FILE, date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ).': '.$msg . file_get_contents(LOG_FILE));
+function CF7EWLogMsg( $msg ) {
+	file_put_contents(CF7EW_LOG_FILE, date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ).': '.$msg . file_get_contents(CF7EW_LOG_FILE));
 }
 
 ?>
