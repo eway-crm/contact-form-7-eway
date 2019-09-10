@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
  */
 
 
-if ( isset( $_POST[CF7EW_SUBMIT_FIELD] ) ) {
+if ( isset( $_POST[CF7EW_SUBMIT_FIELD] ) && isset( $_POST['nonce'] ) && wp_verify_nonce($_POST['nonce'], 'login') ) {
     global $wpdb;
     $table = $wpdb->prefix . "" . CF7EW_SERVICE_TABLE;
     
@@ -58,17 +58,17 @@ if ( isset( $_POST[CF7EW_SUBMIT_FIELD] ) ) {
    
 }
 
-if (isset( $_POST[CF7EW_LOGOUT_FIELD]) )
+if (isset( $_POST[CF7EW_LOGOUT_FIELD] ) && isset( $_POST['nonce'] ) && wp_verify_nonce($_POST['nonce'], 'logout') )
 {
     global $wpdb;
     $wpdb->query( "TRUNCATE TABLE ".$wpdb->prefix . "" . CF7EW_SERVICE_TABLE );   
 }
 
-if ( isset( $_POST[CF7EW_ADD_FIELD] ) )
+if ( isset( $_POST[CF7EW_ADD_FIELD] ) && isset( $_POST['nonce'] ) && wp_verify_nonce($_POST['nonce'], 'fields') )
 {
     global $wpdb;
     $table = $wpdb->prefix . "" . CF7EW_FIELDS_TABLE;
-    $query = $wpdb->insert( $table, array( CF7EW_FIELD_KEY => $_POST["wordpress"], CF7EW_FIELD_VALUE => $_POST["eway"] ) );
+    $query = $wpdb->insert( $table, array( CF7EW_FIELD_KEY => sanitize_text_field( $_POST["wordpress"] ), CF7EW_FIELD_VALUE => sanitize_text_field( $_POST["eway"] ) ) );
     if ( !$query ) {
         CF7EWEchoError( 'Error when creating Contact form 7 eWay-CRM extension custom field. Please try again.' );
         CF7EWLogMsgAdmin( "Error when creating Contact form 7 eWay-CRM extension custom field.\n" );
@@ -79,7 +79,7 @@ if ( isset( $_POST[CF7EW_ADD_FIELD] ) )
     }
 }
 
-if ( isset( $_POST[CF7EW_RESTORE_DEFAULT] ) )
+if ( isset( $_POST[CF7EW_RESTORE_DEFAULT] ) && isset( $_POST['nonce'] ) && wp_verify_nonce($_POST['nonce'], 'fields') )
 {
     global $wpdb;
     $wpdb->query( "TRUNCATE TABLE ".$wpdb->prefix . "" . CF7EW_FIELDS_TABLE );
@@ -89,7 +89,7 @@ if ( isset( $_POST[CF7EW_RESTORE_DEFAULT] ) )
     CF7EWLogMsgAdmin( "Custom fields were restored to default state.\n" );
 }
 
-if ( isset( $_POST[CF7EW_DELETE_FIELD] ) )
+if ( isset( $_POST[CF7EW_DELETE_FIELD] ) && isset( $_POST['nonce'] ) && wp_verify_nonce($_POST['nonce'], 'fields') )
 {
     global $wpdb;
     $table = $wpdb->prefix . "" . CF7EW_FIELDS_TABLE;

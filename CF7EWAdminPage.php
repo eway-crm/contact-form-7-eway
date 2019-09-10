@@ -28,8 +28,8 @@ function CF7EWGetFields()
         
         $ftable .= '
                     <tr>
-                        <td>'.$key.'</td>
-                        <td>'.$value.'</td>
+                        <td>'.esc_html( $key ).'</td>
+                        <td>'.esc_html( $value ).'</td>
                         <td><input  class="buttonStyle" style="float:right; background-color: #0062AF;height:32px;width:108px; color: white; border: none;" type="submit" name="'.CF7EW_DELETE_FIELD.'" value="Delete Field" placeholder="Delete" /></td>
                         <input type="hidden" name="id" value="'.$id.'">
                     </tr>
@@ -136,6 +136,7 @@ if ( $r != null ) {
                             <div style="align-self: center;padding-left: 30px;color: #E43025;font-family: Segoe UI;font-size: 28px;font-weight: bold ;">'.CF7EW_TITLE.'</div>
                             <div style="align-self: center;padding-right: 30px;margin-left: auto;font-family: Segoe UI;font-size: 15px;">You are logged in as '.$r[CF7EW_USER_FIELD].'</div>
                             <div style="align-self: center;float: right;"><input class="buttonStyle" style="background-color: #0062AF;height: 32px;width: 108px;color: white;border: none;" type="submit" name="'.CF7EW_LOGOUT_FIELD.'" value="Log Out" /></div>
+                            <input type="hidden" name="nonce" value="'.wp_create_nonce('logout').'">
                         </div>
                         
                         </form>
@@ -148,7 +149,7 @@ if ( $r != null ) {
                         <div id="History" class="tabcontent" style="display: block;">
                             <div>Below, find all attempts to save data into eWay-CRM.</div>
                             <div class="content">
-                                '.nl2br(file_get_contents(CF7EW_LOG_FILE)).'
+                                '.nl2br( esc_html( file_get_contents( CF7EW_LOG_FILE ) ) ).'
                             </div>
                             <div style="min-height: 25px !important;"></div>
                         </div>
@@ -172,6 +173,7 @@ if ( $r != null ) {
                                 </table>
                             </div>
                             <div style="min-height: 25px !important;"></div>
+                            <input type="hidden" name="nonce" value="'.wp_create_nonce('fields').'">
                             </form>
                         </div>
                             
@@ -255,17 +257,17 @@ else
                             </tr>
                             <tr>
                                 <td colspan="2" style="padding: 10px;">
-                                    <input class="input" type="text" name='.CF7EW_URL_FIELD.' placeholder="Web Service URL" value="'.$_POST[CF7EW_URL_FIELD].'" />
+                                    <input class="input" type="text" name='.CF7EW_URL_FIELD.' placeholder="Web Service URL" value="'.sanitize_text_field( $_POST[CF7EW_URL_FIELD] ).'" />
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="2" style="padding: 10px;">
-                                    <input class="input" type="text" name='.CF7EW_USER_FIELD.' placeholder="Username" value="'.$_POST[CF7EW_USER_FIELD].'" />
+                                    <input class="input" type="text" name='.CF7EW_USER_FIELD.' placeholder="Username" value="'.sanitize_text_field( $_POST[CF7EW_USER_FIELD] ).'" />
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="2" style="padding: 10px;">
-                                    <input class="input" type="password" name='.CF7EW_PWD_FIELD.' placeholder="Password" value="'.$_POST[CF7EW_PWD_FIELD].'" />
+                                    <input class="input" type="password" name='.CF7EW_PWD_FIELD.' placeholder="Password" value="'.sanitize_text_field( $_POST[CF7EW_PWD_FIELD] ).'" />
                                 </td>
                             </tr>
                             <tr style="padding: 20px;">
@@ -273,6 +275,7 @@ else
                                 </td>
                                 <td style="padding: 10px;">
                                     <input class="buttonStyle" type="submit" name='.CF7EW_SUBMIT_FIELD.' value="Log In" />
+                                    <input type="hidden" name="nonce" value="'.wp_create_nonce('login').'">
                                 </td>
                             </tr>
                         </tbody>
