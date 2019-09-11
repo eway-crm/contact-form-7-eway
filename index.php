@@ -10,28 +10,23 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-include_once(ABSPATH . 'wp-includes/pluggable.php');
+require_once( "CF7EWConstants.php" );
 
-if( current_user_can( 'install_plugins' ) )
-{
-    require_once( "CF7EWConstants.php" );
-    
-    require_once( "CF7EWFunctions.php" );
-    
-    // Add link to wp admin menu
-    add_action( 'admin_menu', 'CF7EWMenu' );
-    
-    // Process eWay-CRM lead record 
-    add_action( 'wpcf7_mail_sent', 'CF7EWProcessLead' );
-    
-    // Register install plugin hook
-    register_activation_hook( __FILE__, 'CF7EWInstall' );
-    
-    add_action( 'activated_plugin', 'CF7EWRedirect' );
-    
-    //Register deactivation plugin hook
-    register_deactivation_hook( __FILE__, 'CF7EWDeactivate' );
-}
+require_once( "CF7EWFunctions.php" );
+
+// Add link to wp admin menu
+add_action( 'admin_menu', 'CF7EWMenu' );
+
+// Process eWay-CRM lead record 
+add_action( 'wpcf7_mail_sent', 'CF7EWProcessLead' );
+
+// Register install plugin hook
+register_activation_hook( __FILE__, 'CF7EWInstall' );
+
+add_action( 'activated_plugin', 'CF7EWRedirect' );
+
+//Register deactivation plugin hook
+register_deactivation_hook( __FILE__, 'CF7EWDeactivate' );
 
 function CF7EWProcessLead( $cf7 ) {
     // Process eWay-CRM lead recoring        
@@ -88,7 +83,7 @@ function CF7EWInstall() {
 }
 
 function CF7EWRedirect( $plugin ) {
-    if( $plugin == plugin_basename( __FILE__ ) && current_user_can( 'manage_options' ) ) {
+    if( $plugin == plugin_basename( __FILE__ ) ) {
         exit( wp_redirect( admin_url( 'options-general.php?page"='.CF7EW_ADMIN_PAGE.'' ) ) );
     }
 }

@@ -6,8 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
  * Process updates in Contact form 7 Eway extension plugin
  */
 
-
-if ( isset( $_POST[CF7EW_SUBMIT_FIELD] ) && isset( $_POST['nonce'] ) && wp_verify_nonce($_POST['nonce'], 'login') ) {
+if ( isset( $_POST[CF7EW_SUBMIT_FIELD] ) && isset( $_POST['nonce'] ) && wp_verify_nonce($_POST['nonce'], 'login') && current_user_can( 'manage_options' ) ) {
     global $wpdb;
     $table = $wpdb->prefix . "" . CF7EW_SERVICE_TABLE;
     
@@ -58,13 +57,13 @@ if ( isset( $_POST[CF7EW_SUBMIT_FIELD] ) && isset( $_POST['nonce'] ) && wp_verif
    
 }
 
-if (isset( $_POST[CF7EW_LOGOUT_FIELD] ) && isset( $_POST['nonce'] ) && wp_verify_nonce($_POST['nonce'], 'logout') )
+if (isset( $_POST[CF7EW_LOGOUT_FIELD] ) && isset( $_POST['nonce'] ) && wp_verify_nonce($_POST['nonce'], 'logout') && current_user_can( 'manage_options' ) )
 {
     global $wpdb;
     $wpdb->query( "TRUNCATE TABLE ".$wpdb->prefix . "" . CF7EW_SERVICE_TABLE );   
 }
 
-if ( isset( $_POST[CF7EW_ADD_FIELD] ) && isset( $_POST['nonce'] ) && wp_verify_nonce($_POST['nonce'], 'fields') )
+if ( isset( $_POST[CF7EW_ADD_FIELD] ) && isset( $_POST['nonce'] ) && wp_verify_nonce($_POST['nonce'], 'fields') && current_user_can( 'manage_options' ) )
 {
     global $wpdb;
     $table = $wpdb->prefix . "" . CF7EW_FIELDS_TABLE;
@@ -79,7 +78,7 @@ if ( isset( $_POST[CF7EW_ADD_FIELD] ) && isset( $_POST['nonce'] ) && wp_verify_n
     }
 }
 
-if ( isset( $_POST[CF7EW_RESTORE_DEFAULT] ) && isset( $_POST['nonce'] ) && wp_verify_nonce($_POST['nonce'], 'fields') )
+if ( isset( $_POST[CF7EW_RESTORE_DEFAULT] ) && isset( $_POST['nonce'] ) && wp_verify_nonce($_POST['nonce'], 'fields') && current_user_can( 'manage_options' ) )
 {
     global $wpdb;
     $wpdb->query( "TRUNCATE TABLE ".$wpdb->prefix . "" . CF7EW_FIELDS_TABLE );
@@ -89,7 +88,7 @@ if ( isset( $_POST[CF7EW_RESTORE_DEFAULT] ) && isset( $_POST['nonce'] ) && wp_ve
     CF7EWLogMsgAdmin( "Custom fields were restored to default state.\n" );
 }
 
-if ( isset( $_POST[CF7EW_DELETE_FIELD] ) && isset( $_POST['nonce'] ) && wp_verify_nonce($_POST['nonce'], 'fields') )
+if ( isset( $_POST[CF7EW_DELETE_FIELD] ) && isset( $_POST['nonce'] ) && wp_verify_nonce($_POST['nonce'], 'fields') && current_user_can( 'manage_options' ) )
 {
     global $wpdb;
     $table = $wpdb->prefix . "" . CF7EW_FIELDS_TABLE;
