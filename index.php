@@ -10,12 +10,33 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-require_once( "CF7EWConstants.php" );
+include_once(ABSPATH . 'wp-includes/pluggable.php');
 
-require_once( "CF7EWFunctions.php" );
+if( current_user_can( 'install_plugins' ) )
+{
+    require_once( "CF7EWConstants.php" );
+    
+    require_once( "CF7EWFunctions.php" );
+    
+    // Add link to wp admin menu
+    add_action( 'admin_menu', 'CF7EWMenu' );
+    
+    // Process eWay-CRM lead record 
+    add_action( 'wpcf7_mail_sent', 'CF7EWProcessLead' );
+    
+    // Register install plugin hook
+    register_activation_hook( __FILE__, 'CF7EWInstall' );
+    
+    add_action( 'activated_plugin', 'CF7EWRedirect' );
+    
+    //Register deactivation plugin hook
+    register_deactivation_hook( __FILE__, 'CF7EWDeactivate' );
+}
 
-// Add link to wp admin menu
-add_action( 'admin_menu', 'CF7EWMenu' );
+function CF7EWProcessLead( $cf7 ) {
+    // Process eWay-CRM lead recoring        
+    CF7EWCreateLead( $cf7 );
+}
 
 // Manage plugin adnimnistration page and menu item
 function CF7EWMenu() {
@@ -28,17 +49,6 @@ function CF7EOptions() {
     include( "CF7EWAdminPage.php" );
 }
 
-// Process eWay-CRM lead record 
-add_action( 'wpcf7_mail_sent', 'CF7EWProcessLead' );
-
-function CF7EWProcessLead( $cf7 ) {
-    // Process eWay-CRM lead recoring        
-    CF7EWCreateLead( $cf7 );
-}
-
-// Register install plugin hook
-register_activation_hook( __FILE__, 'CF7EWInstall' );
-
 function CF7EWInstall() {
     // Add to db on install
     global $wpdb;
@@ -47,22 +57,22 @@ function CF7EWInstall() {
 
     // Operation tables creation
     $createServiceTable = "CREATE TABLE IF NOT EXISTS " . $serviceTable . "
-					(
-					" . CF7EW_ID_FIELD . " INT NOT NULL AUTO_INCREMENT,			
-					" . CF7EW_URL_FIELD . " NVARCHAR(256),			
+                    (
+                    " . CF7EW_ID_FIELD . " INT NOT NULL AUTO_INCREMENT,			
+                    " . CF7EW_URL_FIELD . " NVARCHAR(256),			
                     " . CF7EW_USER_FIELD . " NVARCHAR(256),
                     " . CF7EW_PWD_FIELD . " NVARCHAR(256),
                     UNIQUE KEY(" . CF7EW_ID_FIELD . ")
-					)";
+                    )";
                     
     $createFieldsTable = "
                     CREATE TABLE IF NOT EXISTS " . $fieldsTable . "
                     (
-					" . CF7EW_ID_FIELD . " INT NOT NULL AUTO_INCREMENT,					
+                    " . CF7EW_ID_FIELD . " INT NOT NULL AUTO_INCREMENT,					
                     " . CF7EW_FIELD_KEY . " NVARCHAR(256),
                     " . CF7EW_FIELD_VALUE . " NVARCHAR(256),
                     UNIQUE KEY(" . CF7EW_ID_FIELD . ")
-					)";
+                    )";
                     
     $wpdb->query( $createServiceTable );
     $wpdb->query( $createFieldsTable );
@@ -77,16 +87,11 @@ function CF7EWInstall() {
     fclose($fh);
 }
 
-add_action( 'activated_plugin', 'CF7EWRedirect' );
-
 function CF7EWRedirect( $plugin ) {
-    if( $plugin == plugin_basename( __FILE__ ) ) {
+    if( $plugin == plugin_basename( __FILE__ ) && current_user_can( 'manage_options' ) ) {
         exit( wp_redirect( admin_url( 'options-general.php?page"='.CF7EW_ADMIN_PAGE.'' ) ) );
     }
 }
-
-//Register deactivation plugin hook
-register_deactivation_hook( __FILE__, 'CF7EWDeactivate' );
 
 function CF7EWDeactivate() {
     $options = get_option( 'CF7EWOptions' );

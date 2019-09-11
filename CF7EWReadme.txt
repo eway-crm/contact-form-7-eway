@@ -1,4 +1,5 @@
 === eWay-CRM® Extension for Contact Form 7 ===
+Contributors: jpatera
 Requires at least: 5.2.3
 Tested up to: 5.2.3
 Stable tag: 5.2.3
