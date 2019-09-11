@@ -23,7 +23,7 @@ define( "CF7EW_FIELD_KEY",          "field_key" );
 define( "CF7EW_FIELD_VALUE",        "field_value" );
 
 //Labels
-define( "CF7EW_TITLE",              "eWay-CRM® Extension for Contact Form 7" );
+define( "CF7EW_TITLE",              "eWay-CRM Extension for Contact Form 7" );
 define( "CF7EW_SHORT_TITLE",        "eWay-CRM CF7 Extension" );
 
 define( "CF7EW_ADMIN_PAGE",         "manage_eway_cf7_ext" );
