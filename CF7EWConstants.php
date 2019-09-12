@@ -26,7 +26,7 @@ define( "CF7EW_FIELD_VALUE",        "field_value" );
 define( "CF7EW_TITLE",              "eWay-CRM Extension for Contact Form 7" );
 define( "CF7EW_SHORT_TITLE",        "eWay-CRM CF7 Extension" );
 
-define( "CF7EW_ADMIN_PAGE",         "manage_eway_cf7_ext" );
+define( "CF7EW_ADMIN_PAGE",         "manage_eway_crm_cf7_extension" );
 
 //Administration form params
 define( "CF7EW_SUBMIT_FIELD",       "sumbmit_ewayext_changes" );

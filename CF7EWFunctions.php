@@ -1,12 +1,15 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+if (!defined('ABSPATH'))
+	exit; // Exit if accessed directly
 
 /*
  * Functions implementing eWay-CRM lead creation
  */
 
-require_once( 'eway.class.php' );
+if (!class_exists('eWayConnector')) {
+	require_once('eway.class.php');
+}
 
 //Create lead in eWay-CRM database
 function CF7EWCreateLead( $cf7 ) {
