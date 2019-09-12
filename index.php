@@ -1,12 +1,12 @@
 <?php
 
 /*
-  Plugin Name: eWay-CRM Extension for Contact Form 7
-  Plugin URI: https://github.com/eway-crm/contact-form-7-eway
-  Description: Plugin provides ability to create Deals in eWay-CRM from Contact Form 7 forms.
-  Version: 1.1
-  Author: eWay System s.r.o.
- */
+Plugin Name: eWay-CRM Extension for Contact Form 7
+Plugin URI: https://github.com/eway-crm/contact-form-7-eway
+Description: Plugin provides ability to create Deals in eWay-CRM from Contact Form 7 forms.
+Version: 1.1.2
+Author: eWay System s.r.o.
+*/
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 

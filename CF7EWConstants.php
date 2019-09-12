@@ -6,8 +6,8 @@
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 //Application params
-define( "CF7EW_LOG_FILE",           dirname(__FILE__)."\CF7EWLog.txt" );
-define( "CF7EW_ICON_FILE",          plugin_dir_url("CF7EWLogo.svg")."\contact-form-7-eway\CF7EWLogo.svg" );
+define( "CF7EW_LOG_FILE",           dirname( __FILE__ )."\CF7EWLog.txt" );
+define( "CF7EW_ICON_FILE",          plugin_dir_url( __FILE__ )."icon.svg" );
 
 //DB constants
 define( "CF7EW_USER_TABLE",         "eway_cf7_settings" );

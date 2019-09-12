@@ -2,12 +2,14 @@
 Contributors: rstefko, jpatera
 Requires at least: 4.6
 Tested up to: 5.2.3
-Stable tag: 1.1
+Stable tag: 1.1.2
 Requires PHP: 5.2.4
 
-Plugin provides ability to create Deals in eWay-CRM from Contact Form 7 forms.
+Plugin provides ability to create Deals in [eWay-CRM](https://www.eway-crm.com) from Contact Form 7 forms.
 
 == Description ==
+
+Plugin provides ability to create Deals in [eWay-CRM](https://www.eway-crm.com) from Contact Form 7 forms.
 
 By default Deals are created with Name, Email and Message that is in the Contact Form, but you can customize this in the
 Mapping adminitration section.
