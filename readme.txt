@@ -20,3 +20,9 @@ Mapping adminitration section.
 2. Activate the plugin.
 2. In the plugin's settings page fill in your eWay-CRM WebService URL, Username and Password of account that will be used to create Deals in your eWay-CRM.
 4. Map custom fields in "Mapping" section if you wish so.
+
+== Screenshots ==
+
+1. Login
+2. History
+3. Mapping
