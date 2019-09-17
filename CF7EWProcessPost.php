@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 if ( isset( $_POST[CF7EW_SUBMIT_FIELD] ) && isset( $_POST['nonce'] ) && wp_verify_nonce($_POST['nonce'], 'login') && current_user_can( 'manage_options' ) ) {
     global $wpdb;
-    $table = $wpdb->prefix . "" . CF7EW_SERVICE_TABLE;
+    $table = $wpdb->prefix . "" . CF7EW_SETTINGS_TABLE;
     
     $url = addslashes( $_POST[CF7EW_URL_FIELD] );
     $user = addslashes( $_POST[CF7EW_USER_FIELD] );
@@ -60,7 +60,7 @@ if ( isset( $_POST[CF7EW_SUBMIT_FIELD] ) && isset( $_POST['nonce'] ) && wp_verif
 if (isset( $_POST[CF7EW_LOGOUT_FIELD] ) && isset( $_POST['nonce'] ) && wp_verify_nonce($_POST['nonce'], 'logout') && current_user_can( 'manage_options' ) )
 {
     global $wpdb;
-    $wpdb->query( "TRUNCATE TABLE ".$wpdb->prefix . "" . CF7EW_SERVICE_TABLE );   
+    $wpdb->query( "TRUNCATE TABLE ".$wpdb->prefix . "" . CF7EW_SETTINGS_TABLE );   
 }
 
 if ( isset( $_POST[CF7EW_ADD_FIELD] ) && isset( $_POST['nonce'] ) && wp_verify_nonce($_POST['nonce'], 'fields') && current_user_can( 'manage_options' ) )
