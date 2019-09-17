@@ -36,7 +36,7 @@ function CF7EWProcessLead( $cf7 ) {
 // Manage plugin adnimnistration page and menu item
 function CF7EWMenu() {
     //add options page to wp admin section
-    add_options_page( CF7EW_TITLE, CF7EW_SHORT_TITLE, administrator, CF7EW_ADMIN_PAGE, 'CF7EOptions' );
+    add_options_page( CF7EW_TITLE, CF7EW_SHORT_TITLE, 'manage_options', CF7EW_ADMIN_PAGE, 'CF7EOptions' );
 }
 
 // Render plugin administration page

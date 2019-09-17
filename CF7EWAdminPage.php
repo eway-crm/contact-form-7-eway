@@ -38,7 +38,7 @@ function CF7EWGetFields()
     return $ftable;
 }
 
-$table = $wpdb->prefix . "" . CF7EW_SERVICE_TABLE;
+$table = $wpdb->prefix . "" . CF7EW_SETTINGS_TABLE;
 $sql = "SELECT * FROM " . $table;
 $r = $wpdb->get_row( $sql, ARRAY_A );
 

@@ -10,7 +10,7 @@ define( "CF7EW_LOG_FILE",           dirname( __FILE__ )."\CF7EWLog.txt" );
 define( "CF7EW_ICON_FILE",          plugin_dir_url( __FILE__ )."icon.svg" );
 
 //DB constants
-define( "CF7EW_USER_TABLE",         "eway_cf7_settings" );
+define( "CF7EW_SETTINGS_TABLE",     "eway_cf7_settings" );
 define( "CF7EW_FIELDS_TABLE",       "eway_cf7_fields" );
 
 define( "CF7EW_ID_FIELD",           "id" );
