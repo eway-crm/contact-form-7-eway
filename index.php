@@ -47,7 +47,7 @@ function CF7EOptions() {
 function CF7EWInstall() {
     // Add to db on install
     global $wpdb;
-    $serviceTable = $wpdb->prefix . "" . CF7EW_SERVICE_TABLE;
+    $serviceTable = $wpdb->prefix . "" . CF7EW_SETTINGS_TABLE;
     $fieldsTable = $wpdb->prefix . "" . CF7EW_FIELDS_TABLE;
 
     // Operation tables creation
@@ -97,7 +97,7 @@ function CF7EWDeactivate() {
 
     //remove database
     global $wpdb;
-    $table = $wpdb->prefix . "" . CF7EW_SERVICE_TABLE;
+    $table = $wpdb->prefix . "" . CF7EW_SETTINGS_TABLE;
     $drop_table = "DROP TABLE " . $table;
     $wpdb->query( $drop_table );
     
