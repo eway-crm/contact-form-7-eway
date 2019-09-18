@@ -2,6 +2,8 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
+require_once( "CF7EWFunctions.php" );
+
 /*
  * Process updates in Contact form 7 Eway extension plugin
  */
@@ -70,11 +72,11 @@ if ( isset( $_POST[CF7EW_ADD_FIELD] ) && isset( $_POST['nonce'] ) && wp_verify_n
     $query = $wpdb->insert( $table, array( CF7EW_FIELD_KEY => sanitize_text_field( $_POST["wordpress"] ), CF7EW_FIELD_VALUE => sanitize_text_field( $_POST["eway"] ) ) );
     if ( !$query ) {
         CF7EWEchoError( 'Error when creating Contact form 7 eWay-CRM extension custom field. Please try again.' );
-        CF7EWLogMsgAdmin( "Error when creating Contact form 7 eWay-CRM extension custom field.\n" );
+        CF7EWLogMsg( "Error when creating Contact form 7 eWay-CRM extension custom field.\n" );
     }
     else {
         CF7EWEchoInfo( 'Contact form 7 eWay-CRM extension custom field was succesfully created.' );
-        CF7EWLogMsgAdmin( "Contact form 7 eWay-CRM extension custom field was succesfully created.\n" );
+        CF7EWLogMsg( "Contact form 7 eWay-CRM extension custom field was succesfully created.\n" );
     }
 }
 
@@ -85,7 +87,7 @@ if ( isset( $_POST[CF7EW_RESTORE_DEFAULT] ) && isset( $_POST['nonce'] ) && wp_ve
     $wpdb->insert( $wpdb->prefix . "" . CF7EW_FIELDS_TABLE, array( CF7EW_FIELD_KEY => "your-email",     CF7EW_FIELD_VALUE => "Email" ) );
     $wpdb->insert( $wpdb->prefix . "" . CF7EW_FIELDS_TABLE, array( CF7EW_FIELD_KEY => "your-subject",   CF7EW_FIELD_VALUE => "FileAs" ) );
     $wpdb->insert( $wpdb->prefix . "" . CF7EW_FIELDS_TABLE, array( CF7EW_FIELD_KEY => "your-message",   CF7EW_FIELD_VALUE => "Note" ) );
-    CF7EWLogMsgAdmin( "Custom fields were restored to default state.\n" );
+    CF7EWLogMsg( "Custom fields were restored to default state.\n" );
 }
 
 if ( isset( $_POST[CF7EW_DELETE_FIELD] ) && isset( $_POST['nonce'] ) && wp_verify_nonce($_POST['nonce'], 'fields') && current_user_can( 'manage_options' ) )
@@ -95,11 +97,11 @@ if ( isset( $_POST[CF7EW_DELETE_FIELD] ) && isset( $_POST['nonce'] ) && wp_verif
     $query = $wpdb->delete( $table, array( CF7EW_ID_FIELD => $_POST[CF7EW_ID_FIELD] ) );
     if ( !$query ) {
         CF7EWEchoError( 'Error when deleting Contact form 7 eWay-CRM extension custom field. Please try again.' );
-        CF7EWLogMsgAdmin( "Error when deleting Contact form 7 eWay-CRM extension custom field.\n" );
+        CF7EWLogMsg( "Error when deleting Contact form 7 eWay-CRM extension custom field.\n" );
     }
     else {
         CF7EWEchoInfo( 'Contact form 7 eWay-CRM extension custom field was succesfully deleted.' );
-        CF7EWLogMsgAdmin( "Contact form 7 eWay-CRM extension custom field was succesfully deleted.\n" );
+        CF7EWLogMsg( "Contact form 7 eWay-CRM extension custom field was succesfully deleted.\n" );
     }
 }
 
@@ -113,10 +115,6 @@ function CF7EWEchoInfo( $msg ) {
     echo '<div style="margin: 10px; border: 2px solid green; padding: 10px;">';
     echo $msg;
     echo '</div>';
-}
-
-function CF7EWLogMsgAdmin( $msg ) {
-    file_put_contents(CF7EW_LOG_FILE, date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ).': '.$msg . file_get_contents(CF7EW_LOG_FILE));
 }
 
 ?>
