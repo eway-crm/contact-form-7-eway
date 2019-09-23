@@ -132,7 +132,7 @@ if ( $r != null ) {
                         <form action="?page='.CF7EW_ADMIN_PAGE.'" method="post" >
                     
                         <div style="padding-left: 48px;padding-top: 25px;padding-right: 20px;display: flex;vertical-align: center;"> 
-                            <div style=""><object data="'.CF7EW_ICON_FILE.'" type="image/svg+xml" height="60px"></object></div>
+                            <div style=""><img src="'.CF7EW_ICON_FILE.'" height="60px"/></div>
                             <div style="align-self: center;padding-left: 30px;color: #E43025;font-family: Segoe UI;font-size: 28px;font-weight: bold ;">'.CF7EW_TITLE.'</div>
                             <div style="align-self: center;padding-right: 30px;margin-left: auto;font-family: Segoe UI;font-size: 15px;">You are logged in as '.$r[CF7EW_USER_FIELD].'</div>
                             <div style="align-self: center;float: right;"><input class="buttonStyle" style="background-color: #0062AF;height: 32px;width: 108px;color: white;border: none;" type="submit" name="'.CF7EW_LOGOUT_FIELD.'" value="Log Out" /></div>
@@ -142,8 +142,8 @@ if ( $r != null ) {
                         </form>
                         
                         <div class="tab">
-                            <button class="tablinks active" id="btnHistory" onclick="openTab(\'History\', window.pageYOffset);"><div class="bottom active">History</div></button>
-                            <button class="tablinks" id="btnMapping" onclick="openTab(\'Mapping\', window.pageYOffset);"><div class="bottom">Mapping</div></button>
+                            <button class="tablinks active" id="btnHistory" onclick="openTab(\'History\', window.pageYOffset);"><span class="bottom active">History</span></button>
+                            <button class="tablinks" id="btnMapping" onclick="openTab(\'Mapping\', window.pageYOffset);"><span class="bottom">Mapping</span></button>
                         </div>
                         
                         <div id="History" class="tabcontent" style="display: block;">
@@ -155,7 +155,7 @@ if ( $r != null ) {
                         </div>
                         
                         <div id="Mapping" class="tabcontent">
-                            <form onload="" method="post" >
+                            <form action="?page='.CF7EW_ADMIN_PAGE.'#tMapping"" method="post" >
                             Below, create mapping between WordPress and eWay-CRM fields.
                             <div style="min-height: 60px !important;padding-top: 25px;display: flex;vertical-align: center;">
                                 <div style="align-self: center;">WordPress Field <input name="wordpress" type="text"/></div>
@@ -200,7 +200,7 @@ if ( $r != null ) {
                             location.hash = "t" + tabName;
                         }
                           
-                        jQuery(document).ready(function() {
+                        document.addEventListener("DOMContentLoaded", function() {
                             if (location.hash != "") {
                                 openTab(location.hash.substring(2));
                             }
@@ -249,7 +249,7 @@ else
                         <tbody>
                             <tr>
                                 <td style="height: 55px; width: 94px; padding: 10px;">
-                                    <img src="'.CF7EW_ICON_FILE.'" width="100%"></object>
+                                    <img src="'.CF7EW_ICON_FILE.'" width="100%"/>
                                 </td>
                                 <td>
                                     <h2 style="color: #E43025; padding-left: 30px;font-family: Segoe UI;"> '.CF7EW_TITLE.' </h2>
