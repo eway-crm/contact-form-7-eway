@@ -1,8 +1,8 @@
 === eWay-CRM Extension for Contact Form 7 ===
 Contributors: rstefko, jpatera
 Requires at least: 4.6
-Tested up to: 5.2.3
-Stable tag: 1.1.8
+Tested up to: 5.4
+Stable tag: 1.1.9
 Requires PHP: 5.2.4
 
 Plugin provides ability to create Deals in [eWay-CRM](https://www.eway-crm.com) from Contact Form 7 forms.
