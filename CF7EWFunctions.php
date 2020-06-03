@@ -40,7 +40,14 @@ function CF7EWCreateLead( $cf7 ) {
 	{
 		foreach( $fields as $field )
 		{
-			$newLead[$field['field_value']] = $posted_data[$field['field_key']];
+			$field_data = $posted_data[$field['field_key']];
+			
+			if (is_array($field_data))
+			{
+				$field_data = implode(", ", $field_data);
+			}
+			
+			$newLead[$field['field_value']] = $field_data;
 		}
 	}
 	
@@ -52,7 +59,8 @@ function CF7EWCreateLead( $cf7 ) {
 		}
     }
 	catch ( Exception $e ) {
-        CF7EWLogMsg( "Website: Creation of lead: ". $posted_data['FileAs'] ." in eWay via API was unsuccessful:\n".$e."\n" );
+		$data = json_encode($newLead);
+        CF7EWLogMsg( "Website: Creation of lead: ".$data." in eWay via API was unsuccessful:\n".$e."\n" );
         return;
     }
 }

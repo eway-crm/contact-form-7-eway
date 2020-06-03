@@ -30,7 +30,7 @@ function CF7EWGetFields()
                     <tr>
                         <td>'.esc_html( $key ).'</td>
                         <td>'.esc_html( $value ).'</td>
-                        <td><input  class="buttonStyle" style="float:right; background-color: #0062AF;height:32px;width:108px; color: white; border: none;" type="submit" name="'.CF7EW_DELETE_FIELD.'" value="Delete Field" placeholder="Delete" /></td>
+                        <td><input class="buttonStyle" style="float:right; background-color: #0062AF;height:32px;width:108px; color: white; border: none;" type="submit" name="'.CF7EW_DELETE_FIELD.'" value="Delete Field" placeholder="Delete" /></td>
                         <input type="hidden" name="id" value="'.$id.'">
                     </tr>
                     ';
