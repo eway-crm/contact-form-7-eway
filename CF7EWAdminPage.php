@@ -30,8 +30,13 @@ function CF7EWGetFields()
                     <tr>
                         <td>'.esc_html( $key ).'</td>
                         <td>'.esc_html( $value ).'</td>
-                        <td><input class="buttonStyle" style="float:right; background-color: #0062AF;height:32px;width:108px; color: white; border: none;" type="submit" name="'.CF7EW_DELETE_FIELD.'" value="Delete Field" placeholder="Delete" /></td>
-                        <input type="hidden" name="id" value="'.$id.'">
+                        <td>
+							<form action="?page='.CF7EW_ADMIN_PAGE.'#tMapping"" method="post">
+								<input class="buttonStyle" style="float:right; background-color: #0062AF;height:32px;width:108px; color: white; border: none;" type="submit" name="'.CF7EW_DELETE_FIELD.'" value="Delete Field" placeholder="Delete" />
+								<input type="hidden" name="id" value="'.$id.'">
+								<input type="hidden" name="nonce" value="'.wp_create_nonce('delete_field').'">
+							</form>
+						</td>
                     </tr>
                     ';
     }
@@ -129,7 +134,7 @@ if ( $r != null ) {
                     
                     <div style="background-color: white;width: 100%;min-height: 100vh;">
                     
-                        <form action="?page='.CF7EW_ADMIN_PAGE.'" method="post" >
+                        <form action="?page='.CF7EW_ADMIN_PAGE.'" method="post">
                     
                         <div style="padding-left: 48px;padding-top: 25px;padding-right: 20px;display: flex;vertical-align: center;"> 
                             <div style=""><img src="'.CF7EW_ICON_FILE.'" height="60px"/></div>
@@ -155,7 +160,7 @@ if ( $r != null ) {
                         </div>
                         
                         <div id="Mapping" class="tabcontent">
-                            <form action="?page='.CF7EW_ADMIN_PAGE.'#tMapping"" method="post" >
+                            <form action="?page='.CF7EW_ADMIN_PAGE.'#tMapping"" method="post">
                             Below, create mapping between WordPress and eWay-CRM fields.
                             <div style="min-height: 60px !important;padding-top: 25px;display: flex;vertical-align: center;">
                                 <div style="align-self: center;">WordPress Field <input name="wordpress" type="text"/></div>
@@ -163,6 +168,8 @@ if ( $r != null ) {
                                 <div style="align-self: center;float: right;margin-left: 30px;"><input class="buttonStyle" style="float:right; background-color: #0062AF;height:32px;width:108px; color: white; border: none;" type="submit" name="'.CF7EW_ADD_FIELD.'" value="Add Field"/></div>
                                 <div style="align-self: center;margin-left: auto;"><input class="buttonStyle" style="background-color: #0062AF;height:32px;width:150px; color: white; border: none;" type="submit" name="'.CF7EW_RESTORE_DEFAULT.'" value="Restore to Default"/></div>
                             </div>
+                            <input type="hidden" name="nonce" value="'.wp_create_nonce('fields').'">
+                            </form>
                             <div class="content">
                                 <table>
                                     <tr>
@@ -173,8 +180,6 @@ if ( $r != null ) {
                                 </table>
                             </div>
                             <div style="min-height: 25px !important;"></div>
-                            <input type="hidden" name="nonce" value="'.wp_create_nonce('fields').'">
-                            </form>
                         </div>
                             
                     </div>

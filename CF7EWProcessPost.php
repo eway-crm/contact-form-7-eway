@@ -90,7 +90,7 @@ if ( isset( $_POST[CF7EW_RESTORE_DEFAULT] ) && isset( $_POST['nonce'] ) && wp_ve
     CF7EWLogMsg( "Custom fields were restored to default state.\n" );
 }
 
-if ( isset( $_POST[CF7EW_DELETE_FIELD] ) && isset( $_POST['nonce'] ) && wp_verify_nonce($_POST['nonce'], 'fields') && current_user_can( 'manage_options' ) )
+if ( isset( $_POST[CF7EW_DELETE_FIELD] ) && isset( $_POST['nonce'] ) && wp_verify_nonce($_POST['nonce'], 'delete_field') && current_user_can( 'manage_options' ) )
 {
     global $wpdb;
     $table = $wpdb->prefix . "" . CF7EW_FIELDS_TABLE;
