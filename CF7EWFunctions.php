@@ -52,7 +52,7 @@ function CF7EWCreateLead( $cf7 ) {
 		}
     }
 	catch ( Exception $e ) {
-        CF7EWLogMsg( "Website: Creation of lead: ". $posted_data['FileAs'] ." in eWay via API was unsuccessful.\n" );
+        CF7EWLogMsg( "Website: Creation of lead: ". $posted_data['FileAs'] ." in eWay via API was unsuccessful:\n".$e."\n" );
         return;
     }
 }
