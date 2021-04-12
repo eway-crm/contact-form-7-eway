@@ -10,7 +10,9 @@ class eWayConnector
 {
     private $appVersion = 'PHP2.0';
     private $sessionId;
+    private $baseWebServiceAddress;
     private $webServiceAddress;
+    private $oldWebServiceAddressUsed;
     private $username;
     private $passwordHash;
     private $dieOnItemConflict;
@@ -42,7 +44,17 @@ class eWayConnector
         if (empty($password))
             throw new Exception('Empty password');
 
-        $this->webServiceAddress = $this->formatUrl( $webServiceAddress );
+        if( substr( $webServiceAddress, -4, 4 ) == '.svc' || substr( $webServiceAddress, -5, 5 ) == '.svc/' )
+        {
+            $this->webServiceAddress = $webServiceAddress;
+            $this->oldWebServiceAddressUsed = true;
+        }
+        else
+        {
+            $this->webServiceAddress = $this->getApiServiceUrl($webServiceAddress);
+            $this->baseWebServiceAddress = $webServiceAddress;
+        }
+     
         $this->username = $username;
         $this->dieOnItemConflict = $dieOnItemConflict;
         $this->throwExceptionOnFail = $throwExceptionOnFail;
@@ -51,6 +63,19 @@ class eWayConnector
             $this->passwordHash = $password;
         else
             $this->passwordHash = md5($password);
+    }
+    
+        private function getApiServiceUrl($baseUri, $useOldUrl = false)
+    {
+        $path = ($useOldUrl) ? "WcfService/Service.svc" : ( ( substr($baseUri, 0, 7) == 'http://' ) ? "InsecureAPI.svc" : "API.svc");
+        if (substr_compare($baseUri, '/', -1) === 0)
+        {
+            return $baseUri.$path;
+        }
+        else
+        {
+            return $baseUri."/".$path;
+        }
     }
 
     /**
@@ -73,6 +98,9 @@ class eWayConnector
      */
     public function getAdditionalFieldsByItemGuids($guids, $includeForeignKeys = true, $includeRelations = false)
     {
+        if (empty($guids))
+            throw new InvalidArgumentException('Parameter $guids not specified');
+        
         return $this->getItemsByItemGuids('GetAdditionalFieldsByItemGuids', $guids, $includeForeignKeys, $includeRelations);
     }
     
@@ -97,7 +125,7 @@ class eWayConnector
     public function searchAdditionalFields($additionalField, $includeRelations = false)
     {
         if (empty($additionalField))
-            throw new Exception('Empty additional field');
+            throw new InvalidArgumentException('Empty additional field');
 
         // Any search request is defined as POST
         return $this->postRequest('SearchAdditionalFields', $additionalField, $includeRelations);
@@ -111,6 +139,9 @@ class eWayConnector
      */
     public function deleteCart($guid)
     {
+        if (empty($guid))
+            throw new InvalidArgumentException('Parameter $guid not specified');
+        
         return $this->deleteItem('DeleteCart', $guid);
     }
 
@@ -135,7 +166,10 @@ class eWayConnector
      */
     public function getCartsByItemGuids($guids, $includeForeignKeys = true, $includeRelations = false, $omitGoodsInCart = false)
     {
-        if($omitGoodsInCart == true) {
+        if (empty($guids))
+            throw new InvalidArgumentException('Parameter $guids not specified');
+        
+        if ($omitGoodsInCart == true) {
             $additionalParameters = array('omitGoodsInCart' => true);
         } else {
             $additionalParameters = null;
@@ -165,7 +199,7 @@ class eWayConnector
     public function searchCarts($cart, $includeRelations = false)
     {
         if (empty($cart))
-            throw new Exception('Empty cart');
+            throw new InvalidArgumentException('Empty cart');
 
         // Any search request is defined as POST
         return $this->postRequest('SearchCarts', $cart, $includeRelations);
@@ -181,7 +215,7 @@ class eWayConnector
     public function saveCart($cart)
     {
         if (empty($cart))
-            throw new Exception('Empty cart');
+            throw new InvalidArgumentException('Empty cart');
 
         return $this->postRequest('SaveCart', $cart);
     }
@@ -206,6 +240,9 @@ class eWayConnector
      */
     public function getCalendarsByItemGuids($guids, $includeForeignKeys = true, $includeRelations = false)
     {
+        if (empty($guids))
+            throw new InvalidArgumentException('Parameter $guids not specified');
+        
         return $this->getItemsByItemGuids('GetCalendarsByItemGuids', $guids, $includeForeignKeys, $includeRelations);
     }
     
@@ -230,7 +267,7 @@ class eWayConnector
     public function searchCalendars($calendar, $includeRelations = false)
     {
         if (empty($calendar))
-            throw new Exception('Empty calendar');
+            throw new InvalidArgumentException('Empty calendar');
 
         // Any search request is defined as POST
         return $this->postRequest('SearchCalendars', $calendar, $includeRelations);
@@ -246,7 +283,7 @@ class eWayConnector
     public function saveCalendar($calendar)
     {
         if (empty($calendar))
-            throw new Exception('Empty calendar');
+            throw new InvalidArgumentException('Empty calendar');
 
         return $this->postRequest('SaveCalendar', $calendar);
     }
@@ -259,6 +296,9 @@ class eWayConnector
      */
     public function deleteCompany($guid)
     {
+        if (empty($guid))
+            throw new InvalidArgumentException('Parameter $guid not specified');
+        
         return $this->deleteItem('DeleteCompany', $guid);
     }
     
@@ -282,6 +322,9 @@ class eWayConnector
      */
     public function getCompaniesByItemGuids($guids, $includeForeignKeys = true, $includeRelations = false)
     {
+        if (empty($guids))
+            throw new InvalidArgumentException('Parameter $guids not specified');
+        
         return $this->getItemsByItemGuids('GetCompaniesByItemGuids', $guids, $includeForeignKeys, $includeRelations);
     }
 
@@ -306,7 +349,7 @@ class eWayConnector
     public function searchCompanies($company, $includeRelations = false)
     {
         if (empty($company))
-            throw new Exception('Empty company');
+            throw new InvalidArgumentException('Empty company');
 
         // Any search request is defined as POST
         return $this->postRequest('SearchCompanies', $company, $includeRelations);
@@ -322,7 +365,7 @@ class eWayConnector
     public function saveCompany($company)
     {
         if (empty($company))
-            throw new Exception('Empty company');
+            throw new InvalidArgumentException('Empty company');
 
         return $this->postRequest('SaveCompany', $company);
     }
@@ -335,6 +378,9 @@ class eWayConnector
      */
     public function deleteContact($guid)
     {
+        if (empty($guid))
+            throw new InvalidArgumentException('Parameter $guid not specified');
+        
         return $this->deleteItem('DeleteContact', $guid);
     }
     
@@ -358,6 +404,9 @@ class eWayConnector
      */
     public function getContactsByItemGuids($guids, $includeForeignKeys = true, $includeRelations = false)
     {
+        if (empty($guids))
+            throw new InvalidArgumentException('Parameter $guids not specified');
+        
         return $this->getItemsByItemGuids('GetContactsByItemGuids', $guids, $includeForeignKeys, $includeRelations);
     }
     
@@ -382,7 +431,7 @@ class eWayConnector
     public function searchContacts($contact, $includeRelations = false)
     {
         if (empty($contact))
-            throw new Exception('Empty contact');
+            throw new InvalidArgumentException('Empty contact');
 
         // Any search request is defined as POST
         return $this->postRequest('SearchContacts', $contact, $includeRelations);
@@ -398,7 +447,7 @@ class eWayConnector
     public function saveContact($contact)
     {
         if (empty($contact))
-            throw new Exception('Empty contact');
+            throw new InvalidArgumentException('Empty contact');
 
         return $this->postRequest('SaveContact', $contact);
     }
@@ -411,6 +460,9 @@ class eWayConnector
      */
     public function deleteDocument($guid)
     {
+        if (empty($guid))
+            throw new InvalidArgumentException('Parameter $guid not specified');
+        
         return $this->deleteItem('DeleteDocument', $guid);
     }
     
@@ -434,6 +486,9 @@ class eWayConnector
      */
     public function getDocumentsByItemGuids($guids, $includeForeignKeys = true, $includeRelations = false)
     {
+        if (empty($guids))
+            throw new InvalidArgumentException('Parameter $guids not specified');
+        
         return $this->getItemsByItemGuids('GetDocumentsByItemGuids', $guids, $includeForeignKeys, $includeRelations);
     }
     
@@ -458,7 +513,7 @@ class eWayConnector
     public function searchDocuments($document, $includeRelations = false)
     {
         if (empty($document))
-            throw new Exception('Empty document');
+            throw new InvalidArgumentException('Empty document');
 
         // Any search request is defined as POST
         return $this->postRequest('SearchDocuments', $document, $includeRelations);
@@ -474,7 +529,7 @@ class eWayConnector
     public function saveDocument($document)
     {
         if (empty($document))
-            throw new Exception('Empty document');
+            throw new InvalidArgumentException('Empty document');
 
         return $this->postRequest('SaveDocument', $document);
     }
@@ -487,6 +542,9 @@ class eWayConnector
      */
     public function deleteEmail($guid)
     {
+        if (empty($guid))
+            throw new InvalidArgumentException('Parameter $guid not specified');
+        
         return $this->deleteItem('DeleteEmail', $guid);
     }
 
@@ -510,6 +568,9 @@ class eWayConnector
      */
     public function getEmailsByItemGuids($guids, $includeForeignKeys = true, $includeRelations = false)
     {
+        if (empty($guids))
+            throw new InvalidArgumentException('Parameter $guids not specified');
+        
         return $this->getItemsByItemGuids('GetEmailsByItemGuids', $guids, $includeForeignKeys, $includeRelations);
     }
     
@@ -534,7 +595,7 @@ class eWayConnector
     public function searchEmails($email, $includeRelations = false)
     {
         if (empty($email))
-            throw new Exception('Empty email');
+            throw new InvalidArgumentException('Empty email');
 
         // Any search request is defined as POST
         return $this->postRequest('SearchEmails', $email, $includeRelations);
@@ -550,7 +611,7 @@ class eWayConnector
     public function saveEmail($email)
     {
         if (empty($email))
-            throw new Exception('Empty email');
+            throw new InvalidArgumentException('Empty email');
 
         return $this->postRequest('SaveEmail', $email);
     }
@@ -575,6 +636,9 @@ class eWayConnector
      */
     public function getEnumTypesByItemGuids($guids, $includeForeignKeys = true, $includeRelations = false)
     {
+        if (empty($guids))
+            throw new InvalidArgumentException('Parameter $guids not specified');
+        
         return $this->getItemsByItemGuids('GetEnumTypesByItemGuids', $guids, $includeForeignKeys, $includeRelations);
     }
     
@@ -599,7 +663,7 @@ class eWayConnector
     public function searchEnumTypes($enumType, $includeRelations = false)
     {
         if (empty($enumType))
-            throw new Exception('Empty enumType');
+            throw new InvalidArgumentException('Empty enumType');
 
         // Any search request is defined as POST
         return $this->postRequest('SearchEnumTypes', $enumType, $includeRelations);
@@ -625,6 +689,9 @@ class eWayConnector
      */
     public function getEnumValuesByItemGuids($guids, $includeForeignKeys = true, $includeRelations = false)
     {
+        if (empty($guids))
+            throw new InvalidArgumentException('Parameter $guids not specified');
+        
         return $this->getItemsByItemGuids('GetEnumValuesByItemGuids', $guids, $includeForeignKeys, $includeRelations);
     }
     
@@ -649,7 +716,7 @@ class eWayConnector
     public function searchEnumValues($enumValue, $includeRelations = false)
     {
         if (empty($enumValue))
-            throw new Exception('Empty enumValue');
+            throw new InvalidArgumentException('Empty enumValue');
 
         // Any search request is defined as POST
         return $this->postRequest('SearchEnumValues', $enumValue, $includeRelations);
@@ -675,6 +742,9 @@ class eWayConnector
      */
     public function getFeaturesByItemGuids($guids, $includeForeignKeys = true, $includeRelations = false)
     {
+        if (empty($guids))
+            throw new InvalidArgumentException('Parameter $guids not specified');
+        
         return $this->getItemsByItemGuids('GetFeaturesByItemGuids', $guids, $includeForeignKeys, $includeRelations);
     }
     
@@ -699,7 +769,7 @@ class eWayConnector
     public function searchFeatures($features, $includeRelations = false)
     {
         if (empty($features))
-            throw new Exception('Empty features');
+            throw new InvalidArgumentException('Empty features');
 
         // Any search request is defined as POST
         return $this->postRequest('SearchFeatures', $features, $includeRelations);
@@ -725,6 +795,9 @@ class eWayConnector
      */
     public function getFlowsByItemGuids($guids, $includeForeignKeys = true, $includeRelations = false)
     {
+        if (empty($guids))
+            throw new InvalidArgumentException('Parameter $guids not specified');
+        
         return $this->getItemsByItemGuids('GetFlowsByItemGuids', $guids, $includeForeignKeys, $includeRelations);
     }
 
@@ -749,7 +822,7 @@ class eWayConnector
     public function searchFlows($flow, $includeRelations = false)
     {
         if (empty($flow))
-            throw new Exception('Empty flow');
+            throw new InvalidArgumentException('Empty flow');
 
         // Any search request is defined as POST
         return $this->postRequest('SearchFlows', $flow, $includeRelations);
@@ -775,6 +848,9 @@ class eWayConnector
      */
     public function getGlobalSettingsByItemGuids($guids, $includeForeignKeys = true, $includeRelations = false)
     {
+        if (empty($guids))
+            throw new InvalidArgumentException('Parameter $guids not specified');
+        
         return $this->getItemsByItemGuids('GetGlobalSettingsByItemGuids', $guids, $includeForeignKeys, $includeRelations);
     }
     
@@ -799,7 +875,7 @@ class eWayConnector
     public function searchGlobalSettings($globalSetting, $includeRelations = false)
     {
         if (empty($globalSetting))
-            throw new Exception('Empty global setting');
+            throw new InvalidArgumentException('Empty global setting');
 
         // Any search request is defined as POST
         return $this->postRequest('SearchGlobalSettings', $globalSetting, $includeRelations);
@@ -813,6 +889,9 @@ class eWayConnector
      */
     public function deleteGood($guid)
     {
+        if (empty($guid))
+            throw new InvalidArgumentException('Parameter $guid not specified');
+        
         return $this->deleteItem('DeleteGood', $guid);
     }
     
@@ -836,6 +915,9 @@ class eWayConnector
      */
     public function getGoodsByItemGuids($guids, $includeForeignKeys = true, $includeRelations = false)
     {
+        if (empty($guids))
+            throw new InvalidArgumentException('Parameter $guids not specified');
+        
         return $this->getItemsByItemGuids('GetGoodsByItemGuids', $guids, $includeForeignKeys, $includeRelations);
     }
     
@@ -860,7 +942,7 @@ class eWayConnector
     public function searchGoods($good, $includeRelations = false)
     {
         if (empty($good))
-            throw new Exception('Empty good');
+            throw new InvalidArgumentException('Empty good');
 
         // Any search request is defined as POST
         return $this->postRequest('SearchGoods', $good, $includeRelations);
@@ -876,7 +958,7 @@ class eWayConnector
     public function saveGood($good)
     {
         if (empty($good))
-            throw new Exception('Empty good');
+            throw new InvalidArgumentException('Empty good');
 
         return $this->postRequest('SaveGood', $good);
     }
@@ -890,6 +972,9 @@ class eWayConnector
      */
     public function deleteGoodInCart($guid)
     {
+        if (empty($guid))
+            throw new InvalidArgumentException('Parameter $guid not specified');
+        
         return $this->deleteItem('DeleteGoodInCart', $guid);
     }
     
@@ -913,6 +998,9 @@ class eWayConnector
      */
     public function getGoodsInCartByItemGuids($guids, $includeForeignKeys = true, $includeRelations = false)
     {
+        if (empty($guids))
+            throw new InvalidArgumentException('Parameter $guids not specified');
+        
         return $this->getItemsByItemGuids('GetGoodsInCartByItemGuids', $guids, $includeForeignKeys, $includeRelations);
     }
     
@@ -937,7 +1025,7 @@ class eWayConnector
     public function searchGoodsInCart($goodInCart, $includeRelations = false)
     {
         if (empty($goodInCart))
-            throw new Exception('Empty goodInCart');
+            throw new InvalidArgumentException('Empty goodInCart');
 
         // Any search request is defined as POST
         return $this->postRequest('SearchGoodsInCart', $goodInCart, $includeRelations = false);
@@ -953,7 +1041,7 @@ class eWayConnector
     public function saveGoodInCart($goodInCart)
     {
         if (empty($goodInCart))
-            throw new Exception('Empty goodInCart');
+            throw new InvalidArgumentException('Empty goodInCart');
 
         return $this->postRequest('SaveGoodInCart', $goodInCart);
     }
@@ -978,6 +1066,9 @@ class eWayConnector
      */
     public function getGroupsByItemGuids($guids, $includeForeignKeys = true, $includeRelations = false)
     {
+        if (empty($guids))
+            throw new InvalidArgumentException('Parameter $guids not specified');
+        
         return $this->getItemsByItemGuids('GetGroupsByItemGuids', $guids, $includeForeignKeys, $includeRelations);
     }
     
@@ -1002,7 +1093,7 @@ class eWayConnector
     public function searchGroups($group, $includeRelations = false)
     {
         if (empty($group))
-            throw new Exception('Empty group');
+            throw new InvalidArgumentException('Empty group');
 
         // Any search request is defined as POST
         return $this->postRequest('SearchGroups', $group, $includeRelations);
@@ -1018,7 +1109,7 @@ class eWayConnector
     public function saveGroup($group)
     {
         if (empty($group))
-            throw new Exception('Empty group');
+            throw new InvalidArgumentException('Empty group');
 
         return $this->postRequest('SaveGroup', $group);
     }
@@ -1031,6 +1122,9 @@ class eWayConnector
      */
     public function deleteJournal($guid)
     {
+        if (empty($guid))
+            throw new InvalidArgumentException('Parameter $guid not specified');
+        
         return $this->deleteItem('DeleteJournal', $guid);
     }
     
@@ -1054,6 +1148,9 @@ class eWayConnector
      */
     public function getJournalsItemGuids($guids, $includeForeignKeys = true, $includeRelations = false)
     {
+        if (empty($guids))
+            throw new InvalidArgumentException('Parameter $guids not specified');
+        
         return $this->getItemsByItemGuids('GetJournalsByItemGuids', $guids, $includeForeignKeys, $includeRelations);
     }
 
@@ -1078,7 +1175,7 @@ class eWayConnector
     public function searchJournals($journal, $includeRelations = false)
     {
         if (empty($journal))
-            throw new Exception('Empty journal');
+            throw new InvalidArgumentException('Empty journal');
 
         // Any search request is defined as POST
         return $this->postRequest('SearchJournals', $journal, $includeRelations);
@@ -1094,7 +1191,7 @@ class eWayConnector
     public function saveJournal($journal)
     {
         if (empty($journal))
-            throw new Exception('Empty journal');
+            throw new InvalidArgumentException('Empty journal');
 
         return $this->postRequest('SaveJournal', $journal);
     }
@@ -1107,6 +1204,9 @@ class eWayConnector
      */
     public function deleteLead($guid)
     {
+        if (empty($guid))
+            throw new InvalidArgumentException('Parameter $guid not specified');
+        
         return $this->deleteItem('DeleteLead', $guid);
     }
     
@@ -1130,6 +1230,9 @@ class eWayConnector
      */
     public function getLeadsByItemGuids($guids, $includeForeignKeys = true, $includeRelations = false)
     {
+        if (empty($guids))
+            throw new InvalidArgumentException('Parameter $guids not specified');
+        
         return $this->getItemsByItemGuids('GetLeadsByItemGuids', $guids, $includeForeignKeys, $includeRelations);
     }
     
@@ -1154,7 +1257,7 @@ class eWayConnector
     public function searchLeads($lead, $includeRelations = false)
     {
         if (empty($lead))
-            throw new Exception('Empty lead');
+            throw new InvalidArgumentException('Empty lead');
 
         // Any search request is defined as POST
         return $this->postRequest('SearchLeads', $lead, $includeRelations);
@@ -1170,7 +1273,7 @@ class eWayConnector
     public function saveLead($lead)
     {
         if (empty($lead))
-            throw new Exception('Empty lead');
+            throw new InvalidArgumentException('Empty lead');
 
         return $this->postRequest('SaveLead', $lead);
     }
@@ -1183,6 +1286,9 @@ class eWayConnector
      */
     public function deleteMarketingCampaign($guid)
     {
+        if (empty($guid))
+            throw new InvalidArgumentException('Parameter $guid not specified');
+        
         return $this->deleteItem('DeleteMarketingCampaign', $guid);
     }
     
@@ -1206,6 +1312,9 @@ class eWayConnector
      */
     public function getMerketingCampaignsByItemGuids($guids, $includeForeignKeys = true, $includeRelations = false)
     {
+        if (empty($guids))
+            throw new InvalidArgumentException('Parameter $guids not specified');
+        
         return $this->getItemsByItemGuids('GetMarketingCampaignsByItemGuids', $guids, $includeForeignKeys, $includeRelations);
     }
     
@@ -1230,7 +1339,7 @@ class eWayConnector
     public function searchMarketingCampaigns($marketingCampaign, $includeRelations = false)
     {
         if (empty($marketingCampaign))
-            throw new Exception('Empty marketing campaign');
+            throw new InvalidArgumentException('Empty marketing campaign');
 
         // Any search request is defined as POST
         return $this->postRequest('SearchMarketingCampaigns', $marketingCampaign, $includeRelations);
@@ -1246,7 +1355,7 @@ class eWayConnector
     public function saveMarketingCampaign($marketingCampaign)
     {
         if (empty($marketingCampaign))
-            throw new Exception('Empty marketing campaign');
+            throw new InvalidArgumentException('Empty marketing campaign');
 
         return $this->postRequest('SaveMarketingCampaign', $marketingCampaign);
     }
@@ -1259,6 +1368,9 @@ class eWayConnector
      */
     public function deleteMarketingListRecord($guid)
     {
+        if (empty($guid))
+            throw new InvalidArgumentException('Parameter $guid not specified');
+        
         return $this->deleteItem('DeleteMarketingListRecord', $guid);
     }
     
@@ -1282,6 +1394,9 @@ class eWayConnector
      */
     public function getMarketingListsByItemGuids($guids, $includeForeignKeys = true, $includeRelations = false)
     {
+        if (empty($guids))
+            throw new InvalidArgumentException('Parameter $guids not specified');
+        
         return $this->getItemsByItemGuids('GetMarketingListsByItemGuids', $guids, $includeForeignKeys, $includeRelations);
     }
     
@@ -1306,7 +1421,7 @@ class eWayConnector
     public function searchMarketingListsRecords($marketingListRecord, $includeRelations = false)
     {
         if (empty($marketingListRecord))
-            throw new Exception('Empty marketing list record');
+            throw new InvalidArgumentException('Empty marketing list record');
 
         // Any search request is defined as POST
         return $this->postRequest('SearchMarketingListsRecords', $marketingListRecords, $includeRelations);
@@ -1322,7 +1437,7 @@ class eWayConnector
     public function saveMarketingListRecord($marketingListRecord)
     {
         if (empty($marketingListRecord))
-            throw new Exception('Empty marketing list record');
+            throw new InvalidArgumentException('Empty marketing list record');
 
         return $this->postRequest('SaveMarketingListRecord', $marketingListRecord);
     }
@@ -1335,6 +1450,9 @@ class eWayConnector
      */
     public function deleteProject($guid)
     {
+        if (empty($guid))
+            throw new InvalidArgumentException('Parameter $guid not specified');
+        
         return $this->deleteItem('DeleteProject', $guid);
     }
     
@@ -1358,6 +1476,9 @@ class eWayConnector
      */
     public function getProjectsByItemGuids($guids, $includeForeignKeys = true, $includeRelations = false)
     {
+        if (empty($guids))
+            throw new InvalidArgumentException('Parameter $guids not specified');
+        
         return $this->getItemsByItemGuids('GetProjectsByItemGuids', $guids, $includeForeignKeys, $includeRelations);
     }
     
@@ -1382,7 +1503,7 @@ class eWayConnector
     public function searchProjects($project, $includeRelations = false)
     {
         if (empty($project))
-            throw new Exception('Empty project');
+            throw new InvalidArgumentException('Empty project');
 
         // Any search request is defined as POST
         return $this->postRequest('SearchProjects', $project, $includeRelations);
@@ -1398,7 +1519,7 @@ class eWayConnector
     public function saveProject($project)
     {
         if (empty($project))
-            throw new Exception('Empty Project');
+            throw new InvalidArgumentException('Empty Project');
 
         return $this->postRequest('SaveProject', $project);
     }
@@ -1423,6 +1544,9 @@ class eWayConnector
      */
     public function getSalePricesByItemGuids($guids, $includeForeignKeys = true, $includeRelations = false)
     {
+        if (empty($guids))
+            throw new InvalidArgumentException('Parameter $guids not specified');
+        
         return $this->getItemsByItemGuids('GetSalePricesByItemGuids', $guids, $includeForeignKeys, $includeRelations);
     }
     
@@ -1447,7 +1571,7 @@ class eWayConnector
     public function searchSalePrices($salePrice, $includeRelations = false)
     {
         if (empty($salePrice))
-            throw new Exception('Empty salePrice');
+            throw new InvalidArgumentException('Empty salePrice');
 
         // Any search request is defined as POST
         return $this->postRequest('SearchSalePrices', $salePrice, $includeRelations);
@@ -1463,7 +1587,7 @@ class eWayConnector
     public function saveRelation($relation)
     {
         if (empty($relation))
-            throw new Exception('Empty relation');
+            throw new InvalidArgumentException('Empty relation');
 
         return $this->postRequest('SaveRelation', $relation);
     }
@@ -1488,6 +1612,9 @@ class eWayConnector
      */
     public function getTasksByItemGuids($guids, $includeForeignKeys = true, $includeRelations = false)
     {
+        if (empty($guids))
+            throw new InvalidArgumentException('Parameter $guids not specified');
+        
         return $this->getItemsByItemGuids('GetTasksByItemGuids', $guids, $includeForeignKeys, $includeRelations);
     }
     
@@ -1511,7 +1638,7 @@ class eWayConnector
     public function searchTasks($task)
     {
         if (empty($task))
-            throw new Exception('Empty task');
+            throw new InvalidArgumentException('Empty task');
 
         // Any search request is defined as POST
         return $this->postRequest('SearchTasks', $task);
@@ -1528,7 +1655,7 @@ class eWayConnector
     public function saveTask($task, $includeRelations = false)
     {
         if (empty($task))
-            throw new Exception('Empty task');
+            throw new InvalidArgumentException('Empty task');
 
         return $this->postRequest('SaveTask', $task, $includeRelations);
     }
@@ -1553,6 +1680,9 @@ class eWayConnector
      */
     public function getUsersByItemGuids($guids, $includeForeignKeys = true, $includeRelations = false)
     {
+        if (empty($guids))
+            throw new InvalidArgumentException('Parameter $guids not specified');
+        
         return $this->getItemsByItemGuids('GetUsersByItemGuids', $guids, $includeForeignKeys, $includeRelations);
     }
     
@@ -1577,7 +1707,7 @@ class eWayConnector
     public function searchUsers($user, $includeRelations = false)
     {
         if (empty($user))
-            throw new Exception('Empty user');
+            throw new InvalidArgumentException('Empty user');
 
         // Any search request is defined as POST
         return $this->postRequest('SearchUsers', $user, $includeRelations);
@@ -1604,6 +1734,9 @@ class eWayConnector
      */
     public function getWorkflowModelsByItemGuids($guids, $includeForeignKeys = true, $includeRelations = false)
     {
+        if (empty($guids))
+            throw new InvalidArgumentException('Parameter $guids not specified');
+        
         return $this->getItemsByItemGuids('GetWorkflowModelsByItemGuids', $guids, $includeForeignKeys, $includeRelations);
     }
     
@@ -1628,7 +1761,7 @@ class eWayConnector
     public function searchWorkFlowModels($workFlowModel, $includeRelations = false)
     {
         if (empty($workFlowModel))
-            throw new Exception('Empty workFlowModel');
+            throw new InvalidArgumentException('Empty workFlowModel');
 
         // Any search request is defined as POST
         return $this->postRequest('SearchWorkFlowModels', $workFlowModel, $includeRelations);
@@ -1642,6 +1775,9 @@ class eWayConnector
      */
     public function deleteWorkReport($guid)
     {
+        if (empty($guid))
+            throw new InvalidArgumentException('Parameter $guid not specified');
+        
         return $this->deleteItem('DeleteWorkReport', $guid);
     }
     
@@ -1665,6 +1801,9 @@ class eWayConnector
      */
     public function getWorkReportsByItemGuids($guids, $includeForeignKeys = true, $includeRelations = false)
     {
+        if (empty($guids))
+            throw new InvalidArgumentException('Parameter $guids not specified');
+        
         return $this->getItemsByItemGuids('GetWorkReportsByItemGuids', $guids, $includeForeignKeys, $includeRelations);
     }
     
@@ -1689,7 +1828,7 @@ class eWayConnector
     public function searchWorkReports($workReport, $includeRelations = false)
     {
         if (empty($workReport))
-            throw new Exception('Empty workReport');
+            throw new InvalidArgumentException('Empty workReport');
 
         // Any search request is defined as POST
         return $this->postRequest('SearchWorkReports', $workReport, $includeRelations);
@@ -1705,7 +1844,7 @@ class eWayConnector
     public function saveWorkReport($workReport)
     {
         if (empty($workReport))
-            throw new Exception('Empty workReport');
+            throw new InvalidArgumentException('Empty workReport');
 
         return $this->postRequest('SaveWorkReport', $workReport);
     }
@@ -1718,6 +1857,9 @@ class eWayConnector
      */
     public function deleteUserSettings($guid)
     {
+        if (empty($guid))
+            throw new InvalidArgumentException('Parameter $guid not specified');
+        
         return $this->deleteItem('DeleteUserSetting', $guid, '5.3.1.68');
     }
     
@@ -1741,6 +1883,9 @@ class eWayConnector
      */
     public function getUserSettingsByItemGuids($guids, $includeForeignKeys = true, $includeRelations = false)
     {
+        if (empty($guids))
+            throw new InvalidArgumentException('Parameter $guids not specified');
+        
         return $this->getItemsByItemGuids('GetUserSettingsByItemGuids', $guids, $includeForeignKeys, $includeRelations, '5.3.1.68');
     }
     
@@ -1765,7 +1910,7 @@ class eWayConnector
     public function searchUserSettings($userSettings, $includeRelations = false)
     {
         if (empty($userSettings))
-            throw new Exception('Empty userSettings');
+            throw new InvalidArgumentException('Empty userSettings');
 
         // Any search request is defined as POST
         return $this->postRequest('SearchUserSettings', $userSettings, $includeRelations = false, '5.3.1.68');
@@ -1781,7 +1926,7 @@ class eWayConnector
     public function saveUserSettings($userSettings)
     {
         if (empty($userSettings))
-            throw new Exception('Empty userSettings');
+            throw new InvalidArgumentException('Empty userSettings');
 
         return $this->postRequest('SaveUserSetting', $userSettings, '5.3.1.68');
     }
@@ -1862,6 +2007,27 @@ class eWayConnector
         
         return $this->upload($itemGuid, $filePath);
     }
+	
+	/**
+	 * Downloads the binary attachment of a document and saves it into a file.
+	 * If no revision number is specified, downloads the latest revision.
+	 * 
+	 * @param $itemGuid ItemGUID of the document.
+	 * @param $targetFilePath Path to the target file into which the binary content is saved. The file should not exist.
+	 * @param $revision (Optional) The revision number. If no supplied or is zero, the latest revision of the document is downloaded.
+	 */
+	public function getBinaryAttachment($itemGuid, $targetFilePath, $revision = 0) {
+		if (empty($revision) || $revision == 0) {
+			$revisionObj = array(
+                'sessionId' => $this->sessionId,
+				'documtentGuid' => $itemGuid
+			);
+			$revisionResponse = $this->doRequest($revisionObj, 'GetLatestRevision');
+			$revision = $revisionResponse->Datum->Revision;
+		}
+		
+		$this->download($itemGuid, $revision, $targetFilePath);
+	}
 
     /**
      * Formats date and time for the API calls
@@ -1906,27 +2072,11 @@ class eWayConnector
         
         // Check if web service has returned success.
         if ($returnCode != 'rcSuccess') {
-            throw new Exception('Login failed: '.$jsonResult->Description);
+            throw new LoginException($jsonResult);
         }
 
         // Save this sessionId for next time
         $this->sessionId = $jsonResult->SessionId;
-    }
-    
-    private function formatUrl($url)
-    {
-        if( substr_compare( $url, '.svc', -4 ) === 0 || substr_compare( $url, '.svc/', -5 ) === 0 )
-        {
-            return $url;
-        }
-        elseif( substr_compare( $url, '/', -1 ) === 0 )
-        {
-            return $url.'WcfService/Service.svc';
-        }
-        else
-        {
-            return $url.'/WcfService/Service.svc';
-        }
     }
 
     private function createWebServiceUrl($action)
@@ -2016,16 +2166,29 @@ class eWayConnector
     private function executeCurl($ch)
     {
         $result = curl_exec($ch);
+        
         // Check if request has been executed successfully.
-        if ($result === false) {
+        if ($result === false) {            
             throw new Exception('Error occurred while communicating with service: '.curl_error($ch));
         }
 
         // Also Check if return code is OK.
         $curlReturnInfo = curl_getinfo($ch);
-        if ($curlReturnInfo['http_code'] != 200) {
+        if ($curlReturnInfo['http_code'] != 200)
+        {
+            if (!$this->oldWebServiceAddressUsed && $curlReturnInfo['http_code'] == 404)
+            {
+                curl_setopt($ch, CURLOPT_URL, str_replace($this->webServiceAddress, $this->getApiServiceUrl($this->baseWebServiceAddress, true), $curlReturnInfo['url']));
+                $this->webServiceAddress = $this->getApiServiceUrl($this->baseWebServiceAddress, true);
+                $this->oldWebServiceAddressUsed = true;
+                
+                return $this->executeCurl($ch);
+            }
+            
             throw new Exception('Error occurred while communicating with service with http code: '.$curlReturnInfo['http_code']);
         }
+		
+		curl_close($ch); 
 
         return $result;
     }
@@ -2053,7 +2216,7 @@ class eWayConnector
         $result = $this->executeCurl($ch);
         $jsonResult = json_decode($result);
         $returnCode = $jsonResult->ReturnCode;
-
+        
         // Session timed out, re-log again
         if ($returnCode == 'rcBadSession') {
             $this->reLogin();
@@ -2062,19 +2225,19 @@ class eWayConnector
         
         if ($returnCode == 'rcBadSession' || $returnCode == 'rcDatabaseTimeout') {
             // For rcBadSession and rcDatabaseTimeout types of return code we'll try to perform action once again
-            if($repeatSession == true) {
+            if ($repeatSession == true) {
                 return $this->doRequest($completeTransmitObject, $action, $version, false);
             }
         }
         
         if ($this->throwExceptionOnFail && $returnCode != 'rcSuccess') {
-            throw new Exception($returnCode.': '.$jsonResult->Description);
+            throw new ResponseException($jsonResult);
         }
         
         return $jsonResult;
     }
     
-    private function upload($itemGuid, $filePath)
+    private function upload($itemGuid, $filePath, $repeatSession = true)
     {
         // This is first request, login before
         if (empty($this->sessionId)) {
@@ -2082,7 +2245,7 @@ class eWayConnector
             
             return $this->upload($itemGuid, $filePath);
         }
-        
+		
         $url = $this->createFileUploadUrl($itemGuid, basename($filePath));
         $ch = $this->createUploadRequest($url, $filePath);
         
@@ -2090,25 +2253,58 @@ class eWayConnector
         $jsonResult = json_decode($result);
         $returnCode = $jsonResult->ReturnCode;
         
-        // Session timed out, re-log again
-        if ($returnCode == 'rcBadSession') {
-            $this->reLogin();
-            $completeTransmitObject['sessionId'] = $this->sessionId;
-        }
-        
         if ($returnCode == 'rcBadSession' || $returnCode == 'rcDatabaseTimeout') {
             // For rcBadSession and rcDatabaseTimeout types of return code we'll try to perform action once again
             if($repeatSession == true) {
-                return $this->doRequest($completeTransmitObject, $action, $version, false);
+				if ($returnCode == 'rcBadSession') {
+					$this->reLogin();
+				}
+				return $this->upload($itemGuid, $filePath, false);
             }
         }
         
         if ($this->throwExceptionOnFail && $returnCode != 'rcSuccess') {
-            throw new Exception($returnCode.': '.$jsonResult->Description);
+            throw new ResponseException($jsonResult);
         }
         
         return $jsonResult;
     }
+	
+	private function download($itemGuid, $revision, $targetFilePath) {
+		// We cannot be sure the request will be ok (there is no return code).
+		$this->reLogin();
+		
+		if (empty($this->sessionId)) {
+			throw new Exception('Unable to obtain session for downloading.');
+		}
+		
+		$url = $this->createWebServiceUrl('GetBinaryAttachment');
+		$completeTransmitObject = array(
+			'sessionId' => $this->sessionId,
+			'itemGuid' => $itemGuid, 
+			'revision' => $revision
+		);
+        $jsonObject = json_encode($completeTransmitObject, true);
+		
+		$targetFileHandle = fopen($targetFilePath, 'wb');
+		$ch = $this->createDownloadPostRequest($url, $jsonObject, $targetFileHandle);      
+		$result = curl_exec($ch);
+        
+        // Check if request has been executed successfully.
+        if ($result === false) {            
+            throw new Exception('Error occurred while communicating with service: '.curl_error($ch));
+        }
+
+        // Also Check if return code is OK.
+        $curlReturnInfo = curl_getinfo($ch);
+        if ($curlReturnInfo['http_code'] != 200)
+        {            
+            throw new Exception('Error occurred while communicating with service with http code: '.$curlReturnInfo['http_code']);
+        }
+		
+		curl_close($ch);
+		fclose($targetFileHandle);
+	}
     
     private function createPostRequest($url, $jsonObject)
     {
@@ -2136,6 +2332,49 @@ class eWayConnector
         curl_setopt($ch, CURLOPT_INFILE, fopen($filePath, 'r'));
         
         return $ch;
+    }
+	
+	private function createDownloadPostRequest($url, $jsonObject, $targetFilePathHandle) {		
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_FILE, $targetFilePathHandle); 
+		curl_setopt($ch, CURLOPT_HEADER, 0); 
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Accept: application/octet-stream'));
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonObject);
+		
+		return $ch;
+	}
+}
+
+class ResponseException extends Exception
+{
+    public $returnCode;
+    public $description;
+    public $completeResponse;
+    
+    public function __construct($object, $message ='', $code = 0, Exception $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+        
+        $this->returnCode = $object->ReturnCode;
+        $this->description = $object->Description;
+        $this->completeResponse = $object;
+    }
+    
+    public function __toString()
+    {
+        return $this->returnCode.": {$this->description}\n";
+    }
+}
+
+class LoginException extends ResponseException
+{
+    public function __construct($object, $message ='', $code = 0, Exception $previous = null)
+    {
+        parent::__construct($object, "LogIn", $code, $previous);
     }
 }
 ?>
