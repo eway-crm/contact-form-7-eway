@@ -28,7 +28,7 @@ function CF7EWCreateLead( $cf7 ) {
     $sql = "SELECT * FROM " . $table;
     $r = $wpdb->get_row( $sql, ARRAY_A );
     
-    $connector = new eWayConnector( $r[CF7EW_URL_FIELD], $r[CF7EW_USER_FIELD], $r[CF7EW_PWD_FIELD] );
+    $connector = new eWayConnector( $r[CF7EW_URL_FIELD], $r[CF7EW_USER_FIELD], $r[CF7EW_PWD_FIELD], false, false, true, CF7EW_VERSION );
     
     $newLead = array();
     

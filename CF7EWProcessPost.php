@@ -18,7 +18,7 @@ if ( isset( $_POST[CF7EW_SUBMIT_FIELD] ) && isset( $_POST['nonce'] ) && wp_verif
 
     try
     {
-        $connector = new eWayConnector( $url, $user, $password );
+        $connector = new eWayConnector( $url, $user, $password, false, false, true, CF7EW_VERSION );
         
         $permission = false;
         $permissions = $connector->getMyModulePermissions()->Data;
@@ -53,7 +53,7 @@ if ( isset( $_POST[CF7EW_SUBMIT_FIELD] ) && isset( $_POST['nonce'] ) && wp_verif
             CF7EWEchoError( 'Error when updating Contact form 7 eWay-CRM extension parameters. Please check database consistency.' );
         }
     }
-    catch( Exception $e ){
+    catch ( Exception $e ) {
         CF7EWEchoError( $e->getMessage() );
     }
    

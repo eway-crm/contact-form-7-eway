@@ -29,7 +29,7 @@ add_action( 'activated_plugin', 'CF7EWRedirect' );
 register_deactivation_hook( __FILE__, 'CF7EWDeactivate' );
 
 function CF7EWProcessLead( $cf7 ) {
-    // Process eWay-CRM lead recoring        
+    // Process eWay-CRM lead recoring
     CF7EWCreateLead( $cf7 );
 }
 
