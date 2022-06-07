@@ -43,11 +43,25 @@ function CF7EWGetFields()
     return $ftable;
 }
 
-$table = $wpdb->prefix . "" . CF7EW_SETTINGS_TABLE;
+function CF7EWCheckDBUpdate()
+{
+    global $wpdb;
+    
+    $results = $wpdb->get_results( "SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '" . $wpdb->prefix . CF7EW_SETTINGS_TABLE . "' AND COLUMN_NAME = '" . CF7EW_CLIENTID_FIELD . "'" );
+
+    if ( $wpdb->num_rows == 0 ) {
+        $wpdb->query( "ALTER TABLE " . $wpdb->prefix . CF7EW_SETTINGS_TABLE . " ADD " . CF7EW_CLIENTID_FIELD . " VARCHAR(256);" );
+        $wpdb->query( "ALTER TABLE " . $wpdb->prefix . CF7EW_SETTINGS_TABLE . " ADD " . CF7EW_CLIENTSECRET_FIELD . " VARCHAR(256);" );
+        $wpdb->query( "ALTER TABLE " . $wpdb->prefix . CF7EW_SETTINGS_TABLE . " ADD " . CF7EW_CODEVERIFIER_FIELD . " VARCHAR(256);" );
+        $wpdb->query( "ALTER TABLE " . $wpdb->prefix . CF7EW_SETTINGS_TABLE . " ADD " . CF7EW_REFRESHTOKEN_FIELD . " VARCHAR(256);" );
+    }
+}
+
+$table = $wpdb->prefix . CF7EW_SETTINGS_TABLE;
 $sql = "SELECT * FROM " . $table;
 $r = $wpdb->get_row( $sql, ARRAY_A );
 
-if ( $r != null ) {        
+if ( $r[CF7EW_REFRESHTOKEN_FIELD] ) {        
     $urlField = $r[CF7EW_URL_FIELD];
     $userField = $r[CF7EW_USER_FIELD];
     $pwdField = $r[CF7EW_PWD_FIELD];
@@ -217,7 +231,9 @@ if ( $r != null ) {
 }
 else
 {
-     $htmlResult = '
+    CF7EWCheckDBUpdate();
+
+    $htmlResult = '
                     <style>
                     
                     .buttonStyle {
@@ -272,11 +288,16 @@ else
                             </tr>
                             <tr>
                                 <td colspan="2" style="padding: 10px;">
-                                    <input class="input" type="password" name='.CF7EW_PWD_FIELD.' placeholder="Password" value="'.sanitize_text_field( $_POST[CF7EW_PWD_FIELD] ).'" />
+                                    <input class="input" type="text" name='.CF7EW_CLIENTID_FIELD.' placeholder="Client ID" value="'.sanitize_text_field( $_POST[CF7EW_CLIENTID_FIELD] ).'" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="padding: 10px;">
+                                    <input class="input" type="text" name='.CF7EW_CLIENTSECRET_FIELD.' placeholder="Client Secret" value="'.sanitize_text_field( $_POST[CF7EW_CLIENTSECRET_FIELD] ).'" />
                                 </td>
                             </tr>
                             <tr style="padding: 20px;">
-                                <td>                   
+                                <td>
                                 </td>
                                 <td style="padding: 10px;">
                                     <input class="buttonStyle" type="submit" name='.CF7EW_SUBMIT_FIELD.' value="Log In" />

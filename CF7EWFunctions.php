@@ -26,9 +26,15 @@ function CF7EWCreateLead( $cf7 ) {
     global $wpdb;
     $table = $wpdb->prefix . "" . CF7EW_SETTINGS_TABLE;
     $sql = "SELECT * FROM " . $table;
-    $r = $wpdb->get_row( $sql, ARRAY_A );
+    $row = $wpdb->get_row( $sql, ARRAY_A );
+
+    if ( empty( $row[CF7EW_URL_FIELD] ) || empty( $row[CF7EW_USER_FIELD] ) )
+    {
+        CF7EWLogMsg( "Connection has not yet been defined.\n" );
+        return;
+    }
     
-    $connector = new eWayConnector( $r[CF7EW_URL_FIELD], $r[CF7EW_USER_FIELD], $r[CF7EW_PWD_FIELD], false, false, true, CF7EW_VERSION );
+    $connector = new eWayConnector( $row[CF7EW_URL_FIELD], $row[CF7EW_USER_FIELD], $row[CF7EW_PWD_FIELD], false, false, true, CF7EW_VERSION, $row[CF7EW_CLIENTID_FIELD], $row[CF7EW_CLIENTSECRET_FIELD], $row[CF7EW_REFRESHTOKEN_FIELD] );
     
     $newLead = array();
     
@@ -54,13 +60,15 @@ function CF7EWCreateLead( $cf7 ) {
     try
 	{
         $result = $connector->saveLead( $newLead );
-		if ( $result->ReturnCode == 'rcSuccess' ){
-			CF7EWLogMsg( "Website: Creation of lead: ". $posted_data['FileAs'] ." in eWay via API was successful.\n" );
-		}
+		if ( $result->ReturnCode == 'rcSuccess' ) {
+			CF7EWLogMsg( "Website: Creation of lead: ". $result->Guid ." in eWay-CRM via API was successful.\n" );
+		} else {
+            CF7EWLogMsg( "Website: Creation of lead in eWay-CRM via API failed: " . $result->Description . ".\n" );
+        }
     }
 	catch ( Exception $e ) {
 		$data = json_encode($newLead);
-        CF7EWLogMsg( "Website: Creation of lead: ".$data." in eWay via API was unsuccessful:\n".$e."\n" );
+        CF7EWLogMsg( "Website: Creation of lead: ".$data." in eWay-CRM via API was unsuccessful:\n".$e."\n" );
         return;
     }
 }
