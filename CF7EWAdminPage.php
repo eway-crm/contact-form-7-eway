@@ -47,7 +47,7 @@ function CF7EWCheckDBUpdate()
 {
     global $wpdb;
     
-    $results = $wpdb->get_results( "SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '" . $wpdb->prefix . CF7EW_SETTINGS_TABLE . "' AND COLUMN_NAME = '" . CF7EW_CLIENTID_FIELD . "'" );
+    $results = $wpdb->get_results( "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '" . $wpdb->dbname . "' AND TABLE_NAME = '" . $wpdb->prefix . CF7EW_SETTINGS_TABLE . "' AND COLUMN_NAME = '" . CF7EW_CLIENTID_FIELD . "'" );
 
     if ( $wpdb->num_rows == 0 ) {
         $wpdb->query( "ALTER TABLE " . $wpdb->prefix . CF7EW_SETTINGS_TABLE . " ADD " . CF7EW_CLIENTID_FIELD . " VARCHAR(256);" );
