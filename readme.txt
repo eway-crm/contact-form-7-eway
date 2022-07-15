@@ -2,7 +2,7 @@
 Contributors: rstefko, jpatera
 Requires at least: 4.6
 Tested up to: 6.0
-Stable tag: 1.1.15
+Stable tag: 1.1.16
 Requires PHP: 5.2.4
 
 Plugin provides ability to create Deals in [eWay-CRM](https://www.eway-crm.com) from Contact Form 7 forms.
