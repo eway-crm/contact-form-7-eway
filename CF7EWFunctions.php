@@ -11,6 +11,18 @@ if (!class_exists('eWayConnector')) {
 	require_once('eway.class.php');
 }
 
+function CF7EWCreateConnection() {
+    global $wpdb;
+    $table = $wpdb->prefix . "" . CF7EW_SETTINGS_TABLE;
+    $sql = "SELECT * FROM " . $table;
+    $row = $wpdb->get_row( $sql, ARRAY_A );
+
+    if ( empty( $row[CF7EW_URL_FIELD] ) || empty( $row[CF7EW_USER_FIELD] ) )
+        return null;
+    
+    return new eWayConnector( $row[CF7EW_URL_FIELD], $row[CF7EW_USER_FIELD], $row[CF7EW_PWD_FIELD], false, false, true, CF7EW_VERSION, $row[CF7EW_CLIENTID_FIELD], $row[CF7EW_CLIENTSECRET_FIELD], $row[CF7EW_REFRESHTOKEN_FIELD] );
+}
+
 //Create lead in eWay-CRM database
 function CF7EWCreateLead( $cf7 ) {
     
@@ -23,21 +35,16 @@ function CF7EWCreateLead( $cf7 ) {
         $posted_data = $submission->get_posted_data();
     }
 
-    global $wpdb;
-    $table = $wpdb->prefix . "" . CF7EW_SETTINGS_TABLE;
-    $sql = "SELECT * FROM " . $table;
-    $row = $wpdb->get_row( $sql, ARRAY_A );
-
-    if ( empty( $row[CF7EW_URL_FIELD] ) || empty( $row[CF7EW_USER_FIELD] ) )
+    $connector = CF7EWCreateConnection();
+    if (!$connector)
     {
         CF7EWLogMsg( "Connection has not yet been defined.\n" );
         return;
     }
     
-    $connector = new eWayConnector( $row[CF7EW_URL_FIELD], $row[CF7EW_USER_FIELD], $row[CF7EW_PWD_FIELD], false, false, true, CF7EW_VERSION, $row[CF7EW_CLIENTID_FIELD], $row[CF7EW_CLIENTSECRET_FIELD], $row[CF7EW_REFRESHTOKEN_FIELD] );
-    
     $newLead = array();
     
+    global $wpdb;
     $fieldsTable = $wpdb->prefix . "" . CF7EW_FIELDS_TABLE;
     $query = "SELECT * FROM " . $fieldsTable;
 	$fields = $wpdb->get_results( $query, ARRAY_A );
@@ -50,7 +57,7 @@ function CF7EWCreateLead( $cf7 ) {
 			
 			if (is_array($field_data))
 			{
-				$field_data = implode(", ", $field_data);
+				$field_data = implode( ", ", $field_data );
 			}
 			
 			$newLead[$field['field_value']] = $field_data;
@@ -70,6 +77,10 @@ function CF7EWCreateLead( $cf7 ) {
 		$data = json_encode($newLead);
         CF7EWLogMsg( "Website: Creation of lead: ".$data." in eWay-CRM via API was unsuccessful:\n".$e."\n" );
         return;
+    }
+    finally
+    {
+        $connector->logOut();
     }
 }
 

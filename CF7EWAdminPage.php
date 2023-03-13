@@ -3,14 +3,11 @@
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 require_once("CF7EWProcessPost.php");
+require_once("CF7EWFunctions.php");
 
 /*
  * Render admin page form
  */
-
-$urlField = "";
-$userField = "";
-$pwdField = "";
 
 global $wpdb;
 
@@ -57,15 +54,33 @@ function CF7EWCheckDBUpdate()
     }
 }
 
+function CF7EWCheckLogin()
+{
+    $connection = CF7EWCreateConnection();
+    if ( !$connection )
+        return false;
+    
+    try
+    {
+        $userGuid = $connection->getUserGuid();
+    }
+    catch ( Exception $e )
+    {
+        CF7EWLogMsg( "Unable to check login:\n" . $e . "\n" );
+    }
+    finally
+    {
+        $connection->logOut();
+    }
+
+    return !empty( $userGuid );
+}
+
 $table = $wpdb->prefix . CF7EW_SETTINGS_TABLE;
 $sql = "SELECT * FROM " . $table;
 $r = $wpdb->get_row( $sql, ARRAY_A );
 
-if ( $r[CF7EW_REFRESHTOKEN_FIELD] ) {        
-    $urlField = $r[CF7EW_URL_FIELD];
-    $userField = $r[CF7EW_USER_FIELD];
-    $pwdField = $r[CF7EW_PWD_FIELD];
-    
+if ( $r[CF7EW_REFRESHTOKEN_FIELD] && CF7EWCheckLogin() ) {
     $htmlResult = '
                     <style>
                         .tab{
@@ -278,22 +293,22 @@ else
                             </tr>
                             <tr>
                                 <td colspan="2" style="padding: 10px;">
-                                    <input class="input" type="text" name='.CF7EW_URL_FIELD.' placeholder="Web Service URL" value="'.sanitize_text_field( $_POST[CF7EW_URL_FIELD] ).'" />
+                                    <input class="input" type="text" name='.CF7EW_URL_FIELD.' placeholder="Web Service URL" value="'.sanitize_text_field( $_POST[CF7EW_URL_FIELD] ? $_POST[CF7EW_URL_FIELD] : $r[CF7EW_URL_FIELD] ).'" />
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="2" style="padding: 10px;">
-                                    <input class="input" type="text" name='.CF7EW_USER_FIELD.' placeholder="Username" value="'.sanitize_text_field( $_POST[CF7EW_USER_FIELD] ).'" />
+                                    <input class="input" type="text" name='.CF7EW_USER_FIELD.' placeholder="Username" value="'.sanitize_text_field( $_POST[CF7EW_USER_FIELD] ? $_POST[CF7EW_USER_FIELD] : $r[CF7EW_USER_FIELD] ).'" />
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="2" style="padding: 10px;">
-                                    <input class="input" type="text" name='.CF7EW_CLIENTID_FIELD.' placeholder="Client ID" value="'.sanitize_text_field( $_POST[CF7EW_CLIENTID_FIELD] ).'" />
+                                    <input class="input" type="text" name='.CF7EW_CLIENTID_FIELD.' placeholder="Client ID" value="'.sanitize_text_field( $_POST[CF7EW_CLIENTID_FIELD] ? $_POST[CF7EW_CLIENTID_FIELD] : $r[CF7EW_CLIENTID_FIELD] ).'" />
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="2" style="padding: 10px;">
-                                    <input class="input" type="text" name='.CF7EW_CLIENTSECRET_FIELD.' placeholder="Client Secret" value="'.sanitize_text_field( $_POST[CF7EW_CLIENTSECRET_FIELD] ).'" />
+                                    <input class="input" type="text" name='.CF7EW_CLIENTSECRET_FIELD.' placeholder="Client Secret" value="'.sanitize_text_field( $_POST[CF7EW_CLIENTSECRET_FIELD] ? $_POST[CF7EW_CLIENTSECRET_FIELD] : $r[CF7EW_CLIENTSECRET_FIELD] ).'" />
                                 </td>
                             </tr>
                             <tr style="padding: 20px;">
