@@ -1,6 +1,7 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+if (!defined('ABSPATH'))
+    exit; // Exit if accessed directly
 
 require_once("CF7EWProcessPost.php");
 require_once("CF7EWFunctions.php");
@@ -16,22 +17,21 @@ function CF7EWGetFields()
     global $wpdb;
     $fieldsTable = $wpdb->prefix . "" . CF7EW_FIELDS_TABLE;
     $query = "SELECT * FROM " . $fieldsTable;
-    $fields = $wpdb->get_results( $query, ARRAY_A );
-    foreach ( $fields as $field )
-    {
+    $fields = $wpdb->get_results($query, ARRAY_A);
+    foreach ($fields as $field) {
         $key = $field[CF7EW_FIELD_KEY];
         $value = $field[CF7EW_FIELD_VALUE];
         $id = $field[CF7EW_ID_FIELD];
-        
+
         $ftable .= '
                     <tr>
-                        <td>'.esc_html( $key ).'</td>
-                        <td>'.esc_html( $value ).'</td>
+                        <td>' . esc_html($key) . '</td>
+                        <td>' . esc_html($value) . '</td>
                         <td>
-							<form action="?page='.CF7EW_ADMIN_PAGE.'#tMapping"" method="post">
-								<input class="buttonStyle" style="float:right; background-color: #0062AF;height:32px;width:108px; color: white; border: none;" type="submit" name="'.CF7EW_DELETE_FIELD.'" value="Delete Field" placeholder="Delete" />
-								<input type="hidden" name="id" value="'.$id.'">
-								<input type="hidden" name="nonce" value="'.wp_create_nonce('delete_field').'">
+							<form action="?page=' . CF7EW_ADMIN_PAGE . '#tMapping"" method="post">
+								<input class="buttonStyle" style="float:right; background-color: #0062AF;height:32px;width:108px; color: white; border: none;" type="submit" name="' . CF7EW_DELETE_FIELD . '" value="Delete Field" placeholder="Delete" />
+								<input type="hidden" name="id" value="' . $id . '">
+								<input type="hidden" name="nonce" value="' . wp_create_nonce('delete_field') . '">
 							</form>
 						</td>
                     </tr>
@@ -43,44 +43,39 @@ function CF7EWGetFields()
 function CF7EWCheckDBUpdate()
 {
     global $wpdb;
-    
-    $results = $wpdb->get_results( "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '" . $wpdb->dbname . "' AND TABLE_NAME = '" . $wpdb->prefix . CF7EW_SETTINGS_TABLE . "' AND COLUMN_NAME = '" . CF7EW_CLIENTID_FIELD . "'" );
 
-    if ( $wpdb->num_rows == 0 ) {
-        $wpdb->query( "ALTER TABLE " . $wpdb->prefix . CF7EW_SETTINGS_TABLE . " ADD " . CF7EW_CLIENTID_FIELD . " VARCHAR(256);" );
-        $wpdb->query( "ALTER TABLE " . $wpdb->prefix . CF7EW_SETTINGS_TABLE . " ADD " . CF7EW_CLIENTSECRET_FIELD . " VARCHAR(256);" );
-        $wpdb->query( "ALTER TABLE " . $wpdb->prefix . CF7EW_SETTINGS_TABLE . " ADD " . CF7EW_CODEVERIFIER_FIELD . " VARCHAR(256);" );
-        $wpdb->query( "ALTER TABLE " . $wpdb->prefix . CF7EW_SETTINGS_TABLE . " ADD " . CF7EW_REFRESHTOKEN_FIELD . " VARCHAR(256);" );
+    $results = $wpdb->get_results("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '" . $wpdb->dbname . "' AND TABLE_NAME = '" . $wpdb->prefix . CF7EW_SETTINGS_TABLE . "' AND COLUMN_NAME = '" . CF7EW_CLIENTID_FIELD . "'");
+
+    if ($wpdb->num_rows == 0) {
+        $wpdb->query("ALTER TABLE " . $wpdb->prefix . CF7EW_SETTINGS_TABLE . " ADD " . CF7EW_CLIENTID_FIELD . " VARCHAR(256);");
+        $wpdb->query("ALTER TABLE " . $wpdb->prefix . CF7EW_SETTINGS_TABLE . " ADD " . CF7EW_CLIENTSECRET_FIELD . " VARCHAR(256);");
+        $wpdb->query("ALTER TABLE " . $wpdb->prefix . CF7EW_SETTINGS_TABLE . " ADD " . CF7EW_CODEVERIFIER_FIELD . " VARCHAR(256);");
+        $wpdb->query("ALTER TABLE " . $wpdb->prefix . CF7EW_SETTINGS_TABLE . " ADD " . CF7EW_REFRESHTOKEN_FIELD . " VARCHAR(256);");
     }
 }
 
 function CF7EWCheckLogin()
 {
     $connection = CF7EWCreateConnection();
-    if ( !$connection )
+    if (!$connection)
         return false;
-    
-    try
-    {
+
+    try {
         $userGuid = $connection->getUserGuid();
-    }
-    catch ( Exception $e )
-    {
-        CF7EWLogMsg( "Unable to check login:\n" . $e . "\n" );
-    }
-    finally
-    {
+    } catch (Exception $e) {
+        CF7EWLogMsg("Unable to check login:\n" . $e . "\n");
+    } finally {
         $connection->logOut();
     }
 
-    return !empty( $userGuid );
+    return !empty($userGuid);
 }
 
 $table = $wpdb->prefix . CF7EW_SETTINGS_TABLE;
 $sql = "SELECT * FROM " . $table;
-$r = $wpdb->get_row( $sql, ARRAY_A );
+$r = $wpdb->get_row($sql, ARRAY_A);
 
-if ( $r[CF7EW_REFRESHTOKEN_FIELD] && CF7EWCheckLogin() ) {
+if ($r[CF7EW_REFRESHTOKEN_FIELD] && CF7EWCheckLogin()) {
     $htmlResult = '
                     <style>
                         .tab{
@@ -163,14 +158,14 @@ if ( $r[CF7EW_REFRESHTOKEN_FIELD] && CF7EWCheckLogin() ) {
                     
                     <div style="background-color: white;width: 100%;min-height: 100vh;">
                     
-                        <form action="?page='.CF7EW_ADMIN_PAGE.'" method="post">
+                        <form action="?page=' . CF7EW_ADMIN_PAGE . '" method="post">
                     
                         <div style="padding-left: 48px;padding-top: 25px;padding-right: 20px;display: flex;vertical-align: center;"> 
-                            <div style=""><img src="'.CF7EW_ICON_FILE.'" height="60px"/></div>
-                            <div style="align-self: center;padding-left: 30px;color: #E43025;font-family: Segoe UI;font-size: 28px;font-weight: bold ;">'.CF7EW_TITLE.'</div>
-                            <div style="align-self: center;padding-right: 30px;margin-left: auto;font-family: Segoe UI;font-size: 15px;">You are logged in as '.$r[CF7EW_USER_FIELD].'</div>
-                            <div style="align-self: center;float: right;"><input class="buttonStyle" style="background-color: #0062AF;height: 32px;width: 108px;color: white;border: none;" type="submit" name="'.CF7EW_LOGOUT_FIELD.'" value="Log Out" /></div>
-                            <input type="hidden" name="nonce" value="'.wp_create_nonce('logout').'">
+                            <div style=""><img src="' . CF7EW_ICON_FILE . '" height="60px"/></div>
+                            <div style="align-self: center;padding-left: 30px;color: #E43025;font-family: Segoe UI;font-size: 28px;font-weight: bold ;">' . CF7EW_TITLE . '</div>
+                            <div style="align-self: center;padding-right: 30px;margin-left: auto;font-family: Segoe UI;font-size: 15px;">You are logged in as <strong>' . $r[CF7EW_USER_FIELD] . '</strong> to ' . $r[CF7EW_URL_FIELD] . '</div>
+                            <div style="align-self: center;float: right;"><input class="buttonStyle" style="background-color: #0062AF;height: 32px;width: 108px;color: white;border: none;" type="submit" name="' . CF7EW_LOGOUT_FIELD . '" value="Log Out" /></div>
+                            <input type="hidden" name="nonce" value="' . wp_create_nonce('logout') . '">
                         </div>
                         
                         </form>
@@ -183,21 +178,21 @@ if ( $r[CF7EW_REFRESHTOKEN_FIELD] && CF7EWCheckLogin() ) {
                         <div id="History" class="tabcontent" style="display: block;">
                             <div>Below, find all attempts to save data into eWay-CRM.</div>
                             <div class="content">
-                                '.nl2br( esc_html( file_get_contents( CF7EW_LOG_FILE ) ) ).'
+                                ' . nl2br(esc_html(file_get_contents(CF7EW_LOG_FILE))) . '
                             </div>
                             <div style="min-height: 25px !important;"></div>
                         </div>
                         
                         <div id="Mapping" class="tabcontent">
-                            <form action="?page='.CF7EW_ADMIN_PAGE.'#tMapping"" method="post">
+                            <form action="?page=' . CF7EW_ADMIN_PAGE . '#tMapping"" method="post">
                             Below, create mapping between WordPress and eWay-CRM fields.
                             <div style="min-height: 60px !important;padding-top: 25px;display: flex;vertical-align: center;">
                                 <div style="align-self: center;">WordPress Field <input name="wordpress" type="text"/></div>
                                 <div style="align-self: center;padding-left: 30px;">eWay-CRM Field <input name="eway" type="text"/></div>
-                                <div style="align-self: center;float: right;margin-left: 30px;"><input class="buttonStyle" style="float:right; background-color: #0062AF;height:32px;width:108px; color: white; border: none;" type="submit" name="'.CF7EW_ADD_FIELD.'" value="Add Field"/></div>
-                                <div style="align-self: center;margin-left: auto;"><input class="buttonStyle" style="background-color: #0062AF;height:32px;width:150px; color: white; border: none;" type="submit" name="'.CF7EW_RESTORE_DEFAULT.'" value="Restore to Default"/></div>
+                                <div style="align-self: center;float: right;margin-left: 30px;"><input class="buttonStyle" style="float:right; background-color: #0062AF;height:32px;width:108px; color: white; border: none;" type="submit" name="' . CF7EW_ADD_FIELD . '" value="Add Field"/></div>
+                                <div style="align-self: center;margin-left: auto;"><input class="buttonStyle" style="background-color: #0062AF;height:32px;width:150px; color: white; border: none;" type="submit" name="' . CF7EW_RESTORE_DEFAULT . '" value="Restore to Default"/></div>
                             </div>
-                            <input type="hidden" name="nonce" value="'.wp_create_nonce('fields').'">
+                            <input type="hidden" name="nonce" value="' . wp_create_nonce('fields') . '">
                             </form>
                             <div class="content">
                                 <table>
@@ -205,12 +200,11 @@ if ( $r[CF7EW_REFRESHTOKEN_FIELD] && CF7EWCheckLogin() ) {
                                         <th>WordPress Field</th>
                                         <th>eWay-CRM Field</th>
                                     </tr>
-                                '.CF7EWGetFields().'
+                                ' . CF7EWGetFields() . '
                                 </table>
                             </div>
                             <div style="min-height: 25px !important;"></div>
                         </div>
-                            
                     </div>
                     
                     <script>
@@ -241,11 +235,9 @@ if ( $r[CF7EW_REFRESHTOKEN_FIELD] && CF7EWCheckLogin() ) {
                         });
                     </script>
                     ';
-    
+
     echo $htmlResult;
-}
-else
-{
+} else {
     CF7EWCheckDBUpdate();
 
     $htmlResult = '
@@ -277,7 +269,7 @@ else
                     
                     </style>
                     
-                    <form action="?page='.CF7EW_ADMIN_PAGE.'" method="post" >   
+                    <form action="?page=' . CF7EW_ADMIN_PAGE . '" method="post" >   
                     <div style="display: flex;align-items: center;justify-content: center;">    
                     <div style="padding: 20px;display: inline-block;background-color: white;">
                     
@@ -285,38 +277,38 @@ else
                         <tbody>
                             <tr>
                                 <td style="height: 55px; width: 94px; padding: 10px;">
-                                    <img src="'.CF7EW_ICON_FILE.'" width="100%"/>
+                                    <img src="' . CF7EW_ICON_FILE . '" width="100%"/>
                                 </td>
                                 <td>
-                                    <h2 style="color: #E43025; padding-left: 30px;font-family: Segoe UI;"> '.CF7EW_TITLE.' </h2>
+                                    <h2 style="color: #E43025; padding-left: 30px;font-family: Segoe UI;"> ' . CF7EW_TITLE . ' </h2>
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="2" style="padding: 10px;">
-                                    <input class="input" type="text" name='.CF7EW_URL_FIELD.' placeholder="Web Service URL" value="'.sanitize_text_field( $_POST[CF7EW_URL_FIELD] ? $_POST[CF7EW_URL_FIELD] : $r[CF7EW_URL_FIELD] ).'" />
+                                    <input class="input" type="text" name=' . CF7EW_URL_FIELD . ' placeholder="Web Service URL" value="' . sanitize_text_field($_POST[CF7EW_URL_FIELD] ? $_POST[CF7EW_URL_FIELD] : $r[CF7EW_URL_FIELD]) . '" />
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="2" style="padding: 10px;">
-                                    <input class="input" type="text" name='.CF7EW_USER_FIELD.' placeholder="Username" value="'.sanitize_text_field( $_POST[CF7EW_USER_FIELD] ? $_POST[CF7EW_USER_FIELD] : $r[CF7EW_USER_FIELD] ).'" />
+                                    <input class="input" type="text" name=' . CF7EW_USER_FIELD . ' placeholder="Username" value="' . sanitize_text_field($_POST[CF7EW_USER_FIELD] ? $_POST[CF7EW_USER_FIELD] : $r[CF7EW_USER_FIELD]) . '" />
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="2" style="padding: 10px;">
-                                    <input class="input" type="text" name='.CF7EW_CLIENTID_FIELD.' placeholder="Client ID" value="'.sanitize_text_field( $_POST[CF7EW_CLIENTID_FIELD] ? $_POST[CF7EW_CLIENTID_FIELD] : $r[CF7EW_CLIENTID_FIELD] ).'" />
+                                    <input class="input" type="text" name=' . CF7EW_CLIENTID_FIELD . ' placeholder="Client ID" value="' . sanitize_text_field($_POST[CF7EW_CLIENTID_FIELD] ? $_POST[CF7EW_CLIENTID_FIELD] : $r[CF7EW_CLIENTID_FIELD]) . '" />
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="2" style="padding: 10px;">
-                                    <input class="input" type="text" name='.CF7EW_CLIENTSECRET_FIELD.' placeholder="Client Secret" value="'.sanitize_text_field( $_POST[CF7EW_CLIENTSECRET_FIELD] ? $_POST[CF7EW_CLIENTSECRET_FIELD] : $r[CF7EW_CLIENTSECRET_FIELD] ).'" />
+                                    <input class="input" type="text" name=' . CF7EW_CLIENTSECRET_FIELD . ' placeholder="Client Secret" value="' . sanitize_text_field($_POST[CF7EW_CLIENTSECRET_FIELD] ? $_POST[CF7EW_CLIENTSECRET_FIELD] : $r[CF7EW_CLIENTSECRET_FIELD]) . '" />
                                 </td>
                             </tr>
                             <tr style="padding: 20px;">
                                 <td>
                                 </td>
                                 <td style="padding: 10px;">
-                                    <input class="buttonStyle" type="submit" name='.CF7EW_SUBMIT_FIELD.' value="Log In" />
-                                    <input type="hidden" name="nonce" value="'.wp_create_nonce('login').'">
+                                    <input class="buttonStyle" type="submit" name=' . CF7EW_SUBMIT_FIELD . ' value="Log In" />
+                                    <input type="hidden" name="nonce" value="' . wp_create_nonce('login') . '">
                                 </td>
                             </tr>
                         </tbody>
@@ -325,7 +317,7 @@ else
                     </div>    
                     </div>
                     </form>';
-    
+
     echo $htmlResult;
 }
 ?>
