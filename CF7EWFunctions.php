@@ -49,18 +49,28 @@ function CF7EWCreateLead($cf7)
     $fieldsTable = $wpdb->prefix . "" . CF7EW_FIELDS_TABLE;
     $query = "SELECT * FROM " . $fieldsTable;
     $fields = $wpdb->get_results($query, ARRAY_A);
+    $additional_fields = array();
 
     if ($fields != null) {
         foreach ($fields as $field) {
-            $field_data = $posted_data[$field['field_key']];
-
+            $cf_field_name = $field['field_key'];
+            $ew_field_name = $field['field_value'];
+            
+            $field_data = $posted_data[$cf_field_name];
             if (is_array($field_data)) {
                 $field_data = implode(", ", $field_data);
             }
 
-            $newLead[$field['field_value']] = $field_data;
+            if (stripos($ew_field_name, 'af_') === 0) {
+                $additional_fields[$ew_field_name] = $field_data;
+            } else {
+                $newLead[$ew_field_name] = $field_data;
+            }
         }
     }
+
+    // Add also additional fields
+    $newLead['AdditionalFields'] = $additional_fields;
 
     try {
         $result = $connector->saveLead($newLead);

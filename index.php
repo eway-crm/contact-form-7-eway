@@ -4,7 +4,7 @@
 Plugin Name: eWay-CRM Extension for Contact Form 7
 Plugin URI: https://github.com/eway-crm/contact-form-7-eway
 Description: Plugin provides ability to create Deals in eWay-CRM from Contact Form 7 forms.
-Version: 1.1.18
+Version: 1.1.19
 Author: eWay System s.r.o.
 */
 
