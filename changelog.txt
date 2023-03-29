@@ -1,0 +1,4 @@
+*** Changelog ***
+
+Version 1.1.19
+* Added support for basic custom fields
