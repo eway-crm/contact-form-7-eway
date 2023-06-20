@@ -18,7 +18,9 @@ Mapping administration section.
 
 1. Copy this plugin to wordpress plugin directory.
 2. Activate the plugin.
-2. In the plugin's settings page fill in your eWay-CRM WebService URL, Username and Password of account that will be used to create Deals in your eWay-CRM.
+3. In the plugin's settings page fill in your eWay-CRM WebService URL and Username of the user that will be used to create Deals in your eWay-CRM. Ask our
+support for ClientID and ClientSecret. Read our [documentation](https://kb.eway-crm.com/en/documentation/6-add-ins/integration-with-wordpress-1/integration-with-wordpress)
+for more details.
 4. Map custom fields in "Mapping" section if you wish so.
 
 == Screenshots ==
