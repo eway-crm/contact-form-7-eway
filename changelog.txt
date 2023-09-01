@@ -1,4 +1,7 @@
 *** Changelog ***
 
+Version 1.1.20
+* Allow to skip form submission using do_not_store_eway additional setting
+
 Version 1.1.19
 * Added support for basic custom fields

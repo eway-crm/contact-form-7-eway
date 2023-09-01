@@ -27,15 +27,20 @@ function CF7EWCreateConnection()
 //Create lead in eWay-CRM database
 function CF7EWCreateLead($cf7)
 {
-
-    CF7EWLogMsg("Sending form.\n");
-
     //Get contact form fields    
     $submission = WPCF7_Submission::get_instance();
+
+    $contact_form = $submission->get_contact_form();
+    if ($contact_form->is_true( 'do_not_store_eway' )) {
+        CF7EWLogMsg("Ignoring form ".$contact_form->title.", because of do_not_store_eway flag.\n");
+        return;
+    }
 
     if ($submission) {
         $posted_data = $submission->get_posted_data();
     }
+
+    CF7EWLogMsg("Sending form.\n");
 
     $connector = CF7EWCreateConnection();
     if (!$connector) {
