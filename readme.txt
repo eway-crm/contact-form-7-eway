@@ -1,7 +1,7 @@
 === eWay-CRM Extension for Contact Form 7 ===
 Contributors: rstefko, jpatera
 Requires at least: 4.6
-Tested up to: 6.1
+Tested up to: 6.3
 Stable tag: 1.1.20
 Requires PHP: 5.2.4
 
