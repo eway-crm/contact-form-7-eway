@@ -18,6 +18,7 @@ function CF7EWGetFields()
     $fieldsTable = $wpdb->prefix . "" . CF7EW_FIELDS_TABLE;
     $query = "SELECT * FROM " . $fieldsTable;
     $fields = $wpdb->get_results($query, ARRAY_A);
+    $ftable = '';
     foreach ($fields as $field) {
         $key = $field[CF7EW_FIELD_KEY];
         $value = $field[CF7EW_FIELD_VALUE];
