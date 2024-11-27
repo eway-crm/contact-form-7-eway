@@ -11,6 +11,12 @@ if (!class_exists('eWayConnector')) {
     require_once('eway.class.php');
 }
 
+function CF7EWValidateFolder($folder)
+{
+    $possibleFolders = array('Leads', 'Contacts');
+    return in_array($folder, $possibleFolders) ? $folder : 'Leads';
+}
+
 function CF7EWCreateConnection()
 {
     global $wpdb;
@@ -20,12 +26,21 @@ function CF7EWCreateConnection()
 
     if (empty($row[CF7EW_URL_FIELD]) || empty($row[CF7EW_USER_FIELD]))
         return null;
+    $folder = CF7EWValidateFolder(@$row[CF7EW_FOLDER_FIELD]);
+    return new eWayConnector($row[CF7EW_URL_FIELD], $row[CF7EW_USER_FIELD], $row[CF7EW_PWD_FIELD], false, false, true, CF7EW_VERSION, $row[CF7EW_CLIENTID_FIELD], $row[CF7EW_CLIENTSECRET_FIELD], $row[CF7EW_REFRESHTOKEN_FIELD], $folder);
+}
 
-    return new eWayConnector($row[CF7EW_URL_FIELD], $row[CF7EW_USER_FIELD], $row[CF7EW_PWD_FIELD], false, false, true, CF7EW_VERSION, $row[CF7EW_CLIENTID_FIELD], $row[CF7EW_CLIENTSECRET_FIELD], $row[CF7EW_REFRESHTOKEN_FIELD]);
+function CF7EWCheckFolderSettingExistence()
+{
+    global $wpdb;
+    $wpdb->get_results("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '" . $wpdb->dbname . "' AND TABLE_NAME = '" . $wpdb->prefix . CF7EW_SETTINGS_TABLE . "' AND COLUMN_NAME = '" . CF7EW_FOLDER_FIELD . "'");
+    if ($wpdb->num_rows == 0) {
+        $wpdb->query("ALTER TABLE " . $wpdb->prefix . CF7EW_SETTINGS_TABLE . " ADD " . CF7EW_FOLDER_FIELD . " VARCHAR(256);");
+    }
 }
 
 //Create lead in eWay-CRM database
-function CF7EWCreateLead($cf7)
+function CF7EWCreateRecord($cf7)
 {
     //Get contact form fields    
     $submission = WPCF7_Submission::get_instance();
@@ -48,7 +63,7 @@ function CF7EWCreateLead($cf7)
         return;
     }
 
-    $newLead = array();
+    $newRecord = array();
 
     global $wpdb;
     $fieldsTable = $wpdb->prefix . "" . CF7EW_FIELDS_TABLE;
@@ -69,24 +84,25 @@ function CF7EWCreateLead($cf7)
             if (stripos($ew_field_name, 'af_') === 0) {
                 $additional_fields[$ew_field_name] = $field_data;
             } else {
-                $newLead[$ew_field_name] = $field_data;
+                $newRecord[$ew_field_name] = $field_data;
             }
         }
     }
 
     // Add also additional fields
-    $newLead['AdditionalFields'] = $additional_fields;
+    $newRecord['AdditionalFields'] = $additional_fields;
 
     try {
-        $result = $connector->saveLead($newLead);
+        $folder = $connector->getFolder();
+        $result = $folder == 'Contacts' ? $connector->saveContact($newRecord) : $connector->saveLead($newRecord);
         if ($result->ReturnCode == 'rcSuccess') {
-            CF7EWLogMsg("Website: Creation of lead: " . $result->Guid . " in eWay-CRM via API was successful.\n");
+            CF7EWLogMsg("Website: Creation of '$folder' record: " . $result->Guid . " in eWay-CRM via API was successful.\n");
         } else {
-            CF7EWLogMsg("Website: Creation of lead in eWay-CRM via API failed: " . $result->Description . ".\n");
+            CF7EWLogMsg("Website: Creation of '$folder' record in eWay-CRM via API failed: " . $result->Description . ".\n");
         }
     } catch (Exception $e) {
-        $data = json_encode($newLead);
-        CF7EWLogMsg("Website: Creation of lead: " . $data . " in eWay-CRM via API was unsuccessful:\n" . $e . "\n");
+        $data = json_encode($newRecord);
+        CF7EWLogMsg("Website: Creation of record: " . $data . " in eWay-CRM via API was unsuccessful:\n" . $e . "\n");
         return;
     } finally {
         $connector->logOut();

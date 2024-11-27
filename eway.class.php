@@ -23,6 +23,7 @@ class eWayConnector
     private $clientSecret;
     private $accessToken;
     private $refreshToken;
+    private $folder;
 
     /**
      * Initialize eWayConnector class
@@ -42,7 +43,7 @@ class eWayConnector
      * @throws Exception If password is empty
      */
     function __construct($webServiceAddress, $username, $password, $passwordAlreadyEncrypted = false, $dieOnItemConflict = false, $throwExceptionOnFail = true, $appVersion = 'PHP2.3',
-        $clientId = null, $clientSecret = null, $refreshToken = null)
+        $clientId = null, $clientSecret = null, $refreshToken = null, $folder = 'Leads')
     {
         if (empty($webServiceAddress))
             throw new Exception('Empty web service address');
@@ -72,6 +73,7 @@ class eWayConnector
         $this->clientSecret = $clientSecret;
         $this->accessToken = $refreshToken;
         $this->refreshToken = $refreshToken;
+        $this->folder = $folder;
 
         if (!empty($password)) {
             if ($passwordAlreadyEncrypted)
@@ -92,6 +94,11 @@ class eWayConnector
         {
             return $baseUri."/".$path;
         }
+    }
+
+    public function getFolder()
+    {
+        return $this->folder;
     }
 
     /**

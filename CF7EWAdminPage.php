@@ -41,6 +41,18 @@ function CF7EWGetFields()
     return $ftable;
 }
 
+function CF7EWFolders(array $settings)
+{
+    $checkedFolder = $settings[CF7EW_FOLDER_FIELD] ?: "Leads";
+    $out = '';
+    foreach(array("Leads", "Contacts") as $folder) {
+        $color = $folder == $checkedFolder ? '#0062AF': '';
+        $fontColor = $folder == $checkedFolder ? 'white': 'black';
+        $out .= '<input class="buttonStyle" style="background-color: ' . $color . ';height:32px;width:150px; color: ' . $fontColor . '; border: none;" type="submit" name="' . CF7EW_FOLDER_FIELD . '" value="' . $folder . '"/>';
+    }
+    return $out;
+}
+
 function CF7EWCheckDBUpdate()
 {
     global $wpdb;
@@ -185,6 +197,13 @@ if ($r[CF7EW_REFRESHTOKEN_FIELD] && CF7EWCheckLogin()) {
                         </div>
                         
                         <div id="Mapping" class="tabcontent">
+                            <form action="?page=' . CF7EW_ADMIN_PAGE . '#tMapping"" method="post">
+                                eWay-CRM Folder:
+                                <br><br>
+                                ' . CF7EWFolders($r) . '
+                                <input type="hidden" name="nonce" value="' . wp_create_nonce('folder') . '">
+                            </form>
+                            <br>
                             <form action="?page=' . CF7EW_ADMIN_PAGE . '#tMapping"" method="post">
                             Below, create mapping between WordPress and eWay-CRM fields.
                             <div style="min-height: 60px !important;padding-top: 25px;display: flex;vertical-align: center;">
