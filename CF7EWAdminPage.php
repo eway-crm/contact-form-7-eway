@@ -198,7 +198,7 @@ if ($r[CF7EW_REFRESHTOKEN_FIELD] && CF7EWCheckLogin()) {
                         
                         <div id="Mapping" class="tabcontent">
                             <form action="?page=' . CF7EW_ADMIN_PAGE . '#tMapping"" method="post">
-                                eWay-CRM Folder:
+                                Destination eWay-CRM Module:
                                 <br><br>
                                 ' . CF7EWFolders($r) . '
                                 <input type="hidden" name="nonce" value="' . wp_create_nonce('folder') . '">
