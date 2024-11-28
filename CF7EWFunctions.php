@@ -26,8 +26,7 @@ function CF7EWCreateConnection()
 
     if (empty($row[CF7EW_URL_FIELD]) || empty($row[CF7EW_USER_FIELD]))
         return null;
-    $folder = CF7EWValidateFolder(@$row[CF7EW_FOLDER_FIELD]);
-    return new eWayConnector($row[CF7EW_URL_FIELD], $row[CF7EW_USER_FIELD], $row[CF7EW_PWD_FIELD], false, false, true, CF7EW_VERSION, $row[CF7EW_CLIENTID_FIELD], $row[CF7EW_CLIENTSECRET_FIELD], $row[CF7EW_REFRESHTOKEN_FIELD], $folder);
+    return new eWayConnector($row[CF7EW_URL_FIELD], $row[CF7EW_USER_FIELD], $row[CF7EW_PWD_FIELD], false, false, true, CF7EW_VERSION, $row[CF7EW_CLIENTID_FIELD], $row[CF7EW_CLIENTSECRET_FIELD], $row[CF7EW_REFRESHTOKEN_FIELD]);
 }
 
 function CF7EWCheckFolderSettingExistence()
@@ -66,6 +65,10 @@ function CF7EWCreateRecord($cf7)
     $newRecord = array();
 
     global $wpdb;
+    $settingsTable = $wpdb->prefix . "" . CF7EW_SETTINGS_TABLE;
+    $query = "SELECT * FROM " . $settingsTable;
+    $settings = $wpdb->get_row($query, ARRAY_A);
+    $folder = CF7EWValidateFolder(@$settings[CF7EW_FOLDER_FIELD]);
     $fieldsTable = $wpdb->prefix . "" . CF7EW_FIELDS_TABLE;
     $query = "SELECT * FROM " . $fieldsTable;
     $fields = $wpdb->get_results($query, ARRAY_A);
@@ -93,7 +96,6 @@ function CF7EWCreateRecord($cf7)
     $newRecord['AdditionalFields'] = $additional_fields;
 
     try {
-        $folder = $connector->getFolder();
         $result = $folder == 'Contacts' ? $connector->saveContact($newRecord) : $connector->saveLead($newRecord);
         if ($result->ReturnCode == 'rcSuccess') {
             CF7EWLogMsg("Website: Creation of '$folder' record: " . $result->Guid . " in eWay-CRM via API was successful.\n");
