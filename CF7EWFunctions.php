@@ -17,12 +17,16 @@ function CF7EWValidateFolder($folder)
     return in_array($folder, $possibleFolders) ? $folder : 'Leads';
 }
 
-function CF7EWCreateConnection()
+function CF7EWReadSettings()
 {
     global $wpdb;
-    $table = $wpdb->prefix . "" . CF7EW_SETTINGS_TABLE;
-    $sql = "SELECT * FROM " . $table;
-    $row = $wpdb->get_row($sql, ARRAY_A);
+    $sql = "SELECT * FROM " . $wpdb->prefix . CF7EW_SETTINGS_TABLE;
+    return $wpdb->get_row($sql, ARRAY_A);
+}
+
+function CF7EWCreateConnection()
+{
+    $row = CF7EWReadSettings();
 
     if (empty($row[CF7EW_URL_FIELD]) || empty($row[CF7EW_USER_FIELD]))
         return null;
@@ -65,9 +69,7 @@ function CF7EWCreateRecord($cf7)
     $newRecord = array();
 
     global $wpdb;
-    $settingsTable = $wpdb->prefix . "" . CF7EW_SETTINGS_TABLE;
-    $query = "SELECT * FROM " . $settingsTable;
-    $settings = $wpdb->get_row($query, ARRAY_A);
+    $settings = CF7EWReadSettings();
     $folder = CF7EWValidateFolder(@$settings[CF7EW_FOLDER_FIELD]);
     $fieldsTable = $wpdb->prefix . "" . CF7EW_FIELDS_TABLE;
     $query = "SELECT * FROM " . $fieldsTable;
