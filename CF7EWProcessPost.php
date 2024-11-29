@@ -83,6 +83,13 @@ if (isset($_POST[CF7EW_LOGOUT_FIELD]) && isset($_POST['nonce']) && wp_verify_non
     deleteSettings($wpdb);
 }
 
+if (isset($_POST[CF7EW_FOLDER_FIELD]) && isset($_POST['nonce']) && wp_verify_nonce($_POST['nonce'], 'folder') && current_user_can('manage_options')) {
+    CF7EWCheckFolderSettingExistence();
+    $selectedFolder = CF7EWValidateFolder($_POST[CF7EW_FOLDER_FIELD]);
+    $sql = "UPDATE " . $wpdb->prefix . CF7EW_SETTINGS_TABLE . " SET " . CF7EW_FOLDER_FIELD . " = '" . $selectedFolder . "'";
+    $wpdb->query($sql);
+}
+
 if (isset($_POST[CF7EW_ADD_FIELD]) && isset($_POST['nonce']) && wp_verify_nonce($_POST['nonce'], 'fields') && current_user_can('manage_options')) {
     $table = $wpdb->prefix . "" . CF7EW_FIELDS_TABLE;
     $query = $wpdb->insert($table, array(CF7EW_FIELD_KEY => sanitize_text_field($_POST["wordpress"]), CF7EW_FIELD_VALUE => sanitize_text_field($_POST["eway"])));
@@ -98,7 +105,9 @@ if (isset($_POST[CF7EW_RESTORE_DEFAULT]) && isset($_POST['nonce']) && wp_verify_
     $wpdb->insert($wpdb->prefix . "" . CF7EW_FIELDS_TABLE, array(CF7EW_FIELD_KEY => "your-email", CF7EW_FIELD_VALUE => "Email"));
     $wpdb->insert($wpdb->prefix . "" . CF7EW_FIELDS_TABLE, array(CF7EW_FIELD_KEY => "your-subject", CF7EW_FIELD_VALUE => "FileAs"));
     $wpdb->insert($wpdb->prefix . "" . CF7EW_FIELDS_TABLE, array(CF7EW_FIELD_KEY => "your-message", CF7EW_FIELD_VALUE => "Note"));
-    CF7EWLogMsg("Custom fields were restored to default state.\n");
+    CF7EWCheckFolderSettingExistence();
+    $wpdb->query("UPDATE " . $wpdb->prefix . CF7EW_SETTINGS_TABLE . " SET " . CF7EW_FOLDER_FIELD . " = 'Leads'");
+    CF7EWLogMsg("Custom fields and target module were restored to default state.\n");
 }
 
 if (isset($_POST[CF7EW_DELETE_FIELD]) && isset($_POST['nonce']) && wp_verify_nonce($_POST['nonce'], 'delete_field') && current_user_can('manage_options')) {

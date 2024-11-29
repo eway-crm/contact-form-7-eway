@@ -18,8 +18,8 @@ require_once("CF7EWFunctions.php");
 // Add link to wp admin menu
 add_action('admin_menu', 'CF7EWMenu');
 
-// Process eWay-CRM lead record 
-add_action('wpcf7_mail_sent', 'CF7EWProcessLead');
+// Process eWay-CRM record
+add_action('wpcf7_mail_sent', 'CF7EWProcessRecord');
 
 // Register install plugin hook
 register_activation_hook(__FILE__, 'CF7EWInstall');
@@ -29,10 +29,10 @@ add_action('activated_plugin', 'CF7EWRedirect');
 //Register deactivation plugin hook
 register_deactivation_hook(__FILE__, 'CF7EWDeactivate');
 
-function CF7EWProcessLead($cf7)
+function CF7EWProcessRecord($cf7)
 {
     // Process eWay-CRM lead recoring
-    CF7EWCreateLead($cf7);
+    CF7EWCreateRecord($cf7);
 }
 
 // Manage plugin adnimnistration page and menu item
@@ -66,6 +66,7 @@ function CF7EWInstall()
                     " . CF7EW_CLIENTSECRET_FIELD . " VARCHAR(256),
                     " . CF7EW_CODEVERIFIER_FIELD . " VARCHAR(256),
                     " . CF7EW_REFRESHTOKEN_FIELD . " VARCHAR(256),
+                    " . CF7EW_FOLDER_FIELD . " VARCHAR(256),
                     UNIQUE KEY(" . CF7EW_ID_FIELD . ")
                     )";
 

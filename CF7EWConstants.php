@@ -24,6 +24,7 @@ define("CF7EW_CLIENTID_FIELD", "eway_clientid");
 define("CF7EW_CLIENTSECRET_FIELD", "eway_clientsecret");
 define("CF7EW_CODEVERIFIER_FIELD", "eway_codeverifier");
 define("CF7EW_REFRESHTOKEN_FIELD", "eway_refreshtoken");
+define("CF7EW_FOLDER_FIELD", "eway_folder");
 
 define("CF7EW_FIELD_KEY", "field_key");
 define("CF7EW_FIELD_VALUE", "field_value");
