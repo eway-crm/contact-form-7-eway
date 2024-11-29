@@ -162,6 +162,7 @@ if ($r[CF7EW_REFRESHTOKEN_FIELD] && CF7EWCheckLogin()) {
                         
                         .buttonStyle:hover {
                             background-color: #004C89 !important;
+                            color: white !important;
                             cursor: pointer !important;
                         }
                           
