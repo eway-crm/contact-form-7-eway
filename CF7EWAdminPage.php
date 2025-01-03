@@ -45,10 +45,12 @@ function CF7EWFolders(array $settings)
 {
     $checkedFolder = $settings[CF7EW_FOLDER_FIELD] ?: "Leads";
     $out = '';
-    foreach(array("Leads", "Contacts") as $folder) {
+    foreach(array("Leads" => "Deals", "Contacts" => "Contacts") as $folder => $label) {
         $color = $folder == $checkedFolder ? '#0062AF': '';
         $fontColor = $folder == $checkedFolder ? 'white': 'black';
-        $out .= '<input class="buttonStyle" style="background-color: ' . $color . ';height:32px;width:150px; color: ' . $fontColor . '; border: none;" type="submit" name="' . CF7EW_FOLDER_FIELD . '" value="' . $folder . '"/>';
+        $out .= '<button class="buttonStyle" style="background-color: ' . $color . ';height:32px;width:150px; color: ' . $fontColor . '; border: none;" type="submit" name="' . CF7EW_FOLDER_FIELD . '" value="' . $folder . '">';
+        $out .= $label;
+        $out .= '</button>';
     }
     return $out;
 }
